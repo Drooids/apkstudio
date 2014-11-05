@@ -98,6 +98,25 @@ bool ADB::chown(const QString &device, const QString &path, const QString &owner
     return execute(arguments).isEmpty();
 }
 
+bool ADB::copy(const QString &device, const QString &source, const QString &destination, bool recursive) const
+{
+    QStringList arguments("-s");
+    arguments << device;
+    arguments << "shell";
+    if (Settings::rootShell()) {
+        arguments << "su";
+        arguments << "-c";
+        arguments << QString(recursive ? "cp -R %1 %2" : "cp %1 %2").arg(source, destination);
+    } else {
+        arguments << "cp";
+        if (recursive)
+            arguments << "-R";
+        arguments << source;
+        arguments << destination;
+    }
+    return execute(arguments).isEmpty();
+}
+
 bool ADB::create(const QString &device, const QString &path) const
 {
     QStringList arguments("-s");

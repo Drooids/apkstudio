@@ -2,6 +2,9 @@
 #define VPZ_APKSTUDIO_COMPONENTS_MUSIC_HPP
 
 #include <QAction>
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QTreeWidget>
 #include "helpers/adb.hpp"
 #include "helpers/format.hpp"
@@ -39,6 +42,7 @@ public:
         ACTION_RENAME
     };
     explicit Music(const QString &, QWidget * = 0);
+    QVector<Resources::Music> selected();
     ~Music();
 public slots:
     void onAction(QAction *);

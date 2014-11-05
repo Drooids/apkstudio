@@ -2,6 +2,8 @@
 #define VPZ_APKSTUDIO_COMPONENTS_PHOTOS_HPP
 
 #include <QAction>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QTreeWidget>
 #include "helpers/adb.hpp"
 #include "helpers/format.hpp"

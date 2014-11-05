@@ -1068,16 +1068,28 @@
         <translation>Size</translation>
     </message>
     <message>
+        <source>label_copy</source>
+        <translation>Enter destination path to copy files to</translation>
+    </message>
+    <message>
         <source>label_create</source>
-        <translation>Enter folder name</translation>
+        <translation>Enter new folder name</translation>
     </message>
     <message>
         <source>label_move</source>
-        <translation>Enter folder path to move files to</translation>
+        <translation>Enter destination path to move files to</translation>
     </message>
     <message>
         <source>label_rename</source>
         <translation>Enter new file/folder name</translation>
+    </message>
+    <message>
+        <source>message_copy</source>
+        <translation>Do you really wish to copy %1 file(s)/folder(s) to %2?</translation>
+    </message>
+    <message>
+        <source>message_copy_failed</source>
+        <translation>Successfully copied: %1, failed: %2</translation>
     </message>
     <message>
         <source>message_create_failed</source>
@@ -1089,7 +1101,7 @@
     </message>
     <message>
         <source>message_move_failed</source>
-        <translation>Failed to all or few of selected file(s)/folder(s) to %1</translation>
+        <translation>Failed to move all or few of selected file(s)/folder(s) to %1</translation>
     </message>
     <message>
         <source>message_pull_failed</source>
@@ -1118,6 +1130,10 @@
     <message>
         <source>title_browse</source>
         <translation>Select Folder</translation>
+    </message>
+    <message>
+        <source>title_copy</source>
+        <translation>Copy File(s)/Folder(s)</translation>
     </message>
     <message>
         <source>title_create</source>

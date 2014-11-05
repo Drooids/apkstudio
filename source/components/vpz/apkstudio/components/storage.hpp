@@ -29,7 +29,9 @@ private:
     TreeWidget *tree;
 private:
     void onCHMOD();
+    void onCopy(const QVector<Resources::File> &, const QString &);
     void onDetails();
+    void onMove(const QStringList &, const QString &);
     void onPull();
     void onPush();
     QVector<Resources::File> selected();

@@ -53,12 +53,12 @@ void Explorer::createToolbar()
     applications->addAction(::icon("cross"), translate("label_disable"))->setData(Applications::ACTION_DISABLE);
     applications->addAction(::icon("arrow_top_left"), translate("label_pull"))->setData(Applications::ACTION_PULL);
     applications->setVisible(false);
-    music->addAction(::icon("details"), translate("label_details"));
-    music->addAction(::icon("scissors"), translate("label_move"));
-    music->addAction(::icon("files"), translate("label_copy"));
-    music->addAction(::icon("arrow_top_left"), translate("label_pull"));
-    music->addAction(::icon("rename"), translate("label_rename"));
-    music->addAction(::icon("bin_empty"), translate("label_remove"));
+    music->addAction(::icon("details"), translate("label_details"))->setData(Components::Music::ACTION_DETAILS);
+    music->addAction(::icon("scissors"), translate("label_move"))->setData(Components::Music::ACTION_DETAILS);
+    music->addAction(::icon("files"), translate("label_copy"))->setData(Components::Music::ACTION_COPY);
+    music->addAction(::icon("arrow_top_left"), translate("label_pull"))->setData(Components::Music::ACTION_PULL);
+    music->addAction(::icon("rename"), translate("label_rename"))->setData(Components::Music::ACTION_RENAME);
+    music->addAction(::icon("bin_empty"), translate("label_remove"))->setData(Components::Music::ACTION_REMOVE);
     music->setVisible(false);
     partitions->addAction(::icon("drive_arrow"), translate("label_remount"))->setData(Partitions::ACTION_REMOUNT);
     partitions->addAction(::icon("drive_minus"), translate("label_unmount"))->setData(Partitions::ACTION_UNMOUNT);

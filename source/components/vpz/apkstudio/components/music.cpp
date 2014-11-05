@@ -54,6 +54,26 @@ void Music::onAction(QAction *action)
 
 void Music::onCopy()
 {
+    QVector<Resources::Music> files = selected();
+    if (files.isEmpty())
+        return;
+    bool ok = false;
+    QString destination = QInputDialog::getText(this, translate("title_copy"), translate("label_copy"), QLineEdit::Normal, "/", &ok);
+    if (!ok || destination.trimmed().isEmpty())
+        return;
+    int result =  QMessageBox::question(this, translate("title_copy"), translate("message_copy").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    int failed = 0;
+    int successful = 0;
+    foreach (const Resources::Music &file, files) {
+        if (ADB::instance()->copy(device, file.path, destination, false))
+            successful++;
+        else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(failed, successful), QMessageBox::Close);
 }
 
 void Music::onDetails()
@@ -62,10 +82,50 @@ void Music::onDetails()
 
 void Music::onMove()
 {
+    QVector<Resources::Music> files = selected();
+    if (files.isEmpty())
+        return;
+    QStringList sources;
+    foreach (const Resources::Music &file, files)
+        sources << file.path;
+    bool ok = false;
+    QString destination = QInputDialog::getText(this, translate("title_move"), translate("label_move"), QLineEdit::Normal, "/", &ok);
+    if (!ok || destination.trimmed().isEmpty())
+        return;
+    int result =  QMessageBox::question(this, translate("title_move"), translate("message_move").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    if (ADB::instance()->move(device, sources, destination))
+        onRefresh();
+    else
+        QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(destination), QMessageBox::Close);
 }
 
 void Music::onPull()
 {
+    QVector<Resources::Music> files = selected();
+    if (files.isEmpty())
+        return;
+    QFileDialog dialog(this, translate("title_browse"), Helpers::Settings::previousDirectory());
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setFileMode(QFileDialog::Directory);
+    if (dialog.exec() != QFileDialog::Accepted)
+        return;
+    QStringList folders = dialog.selectedFiles();
+    if (folders.count() != 1)
+        return;
+    QDir directory(folders.first());
+    Helpers::Settings::previousDirectory(directory.absolutePath());
+    int failed = 0;
+    int successful = 0;
+    foreach (const Resources::Music &file, files) {
+        if (ADB::instance()->pull(device, file.path, directory.absolutePath()))
+            successful++;
+        else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(successful, failed), QMessageBox::Close);
 }
 
 void Music::onRefresh()
@@ -90,10 +150,73 @@ void Music::onRefresh()
 
 void Music::onRemove()
 {
+    QVector<Resources::Music> files = selected();
+    if (files.isEmpty())
+        return;
+    int result =  QMessageBox::question(this, translate("title_remove"), translate("message_remove").arg(QString::number(files.count())), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    int failed = 0;
+    int successful = 0;
+    foreach (const Resources::Music &file, files) {
+        if (ADB::instance()->remove(device, file.path, false)) {
+            successful++;
+            QList<QTreeWidgetItem *> rows = findItems(file.name, Qt::MatchExactly, 0);
+            if (rows.count() != 1)
+                continue;
+            delete rows.first();
+        } else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(successful, failed), QMessageBox::Close);
 }
 
 void Music::onRename()
 {
+    QVector<Resources::Music> files = selected();
+    if (files.isEmpty())
+        return;
+    bool ok = false;
+    QString name = QInputDialog::getText(this, translate("title_rename"), translate("label_rename"), QLineEdit::Normal, files.first().name, &ok);
+    if (!ok || name.trimmed().isEmpty())
+        return;
+    bool multiple = (files.count() > 1);
+    int failed = 0;
+    int successful = 0;
+    for (int i = 0; i < files.count(); ++i) {
+        QString newname(name);
+        if (multiple)
+            newname.prepend(QString("(%1) ").arg(QString::number(i + 1)));
+        Resources::Music file = files.at(i);
+        QString newpath(file.path.section('/', 0, -2));
+        newpath.append('/');
+        newpath.append(newname);
+        if (ADB::instance()->rename(device, file.path, newpath)) {
+            successful++;
+            QList<QTreeWidgetItem *> rows = findItems(file.name, Qt::MatchExactly, 0);
+            if (rows.count() != 1)
+                continue;
+            file.name = newname;
+            file.path = newpath;
+            QTreeWidgetItem *row = rows.first();
+            for (int i = 0; i < 6; ++i)
+                row->setData(i, ROLE_STRUCT, QVariant::fromValue(file));
+            row->setText(0, newname);
+            row->setToolTip(0, newpath);
+        } else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(successful, failed), QMessageBox::Close);
+}
+
+QVector<Resources::Music> Music::selected()
+{
+    QVector<Resources::Music> files;
+    foreach (QTreeWidgetItem *item, selectedItems())
+        files.append(item->data(0, ROLE_STRUCT).value<Resources::Music>());
+    return files;
 }
 
 Music::~Music()

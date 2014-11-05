@@ -100,6 +100,31 @@ void Storage::onCopy()
 {
     if (path->hasFocus())
         return;
+    QVector<File> files = selected();
+    if (files.isEmpty())
+        return;
+    bool ok = false;
+    QString destination = QInputDialog::getText(this, translate("title_copy"), translate("label_copy"), QLineEdit::Normal, path->text(), &ok);
+    if (!ok || destination.trimmed().isEmpty())
+        return;
+    onCopy(files, destination);
+}
+
+void Storage::onCopy(const QVector<File> &files, const QString &destination)
+{
+    int result =  QMessageBox::question(this, translate("title_copy"), translate("message_copy").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    int failed = 0;
+    int successful = 0;
+    foreach (const File &file, files) {
+        if (ADB::instance()->copy(device, file.path, destination, ((file.type == File::FOLDER) || (file.type == File::SYMLINK_FOLDER))))
+            successful++;
+        else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(failed, successful), QMessageBox::Close);
 }
 
 void Storage::onCreate()
@@ -176,18 +201,21 @@ void Storage::onFilesDropped(const QStringList &files, const QModelIndex &at)
 
 void Storage::onItemsDropped(const QModelIndexList &rows, const QModelIndex &at, Qt::DropAction action)
 {
+    if (!at.isValid())
+        return;
+    File destination = at.data(ROLE_STRUCT).value<File>();
+    if (!((destination.type == File::FOLDER) || (destination.type == File::SYMLINK_FOLDER)))
+        return;
     if (action == Qt::MoveAction) {
-        qDebug() << "Dropped:";
+        QStringList files;
         foreach (const QModelIndex &index, rows)
-            qDebug() << index.data(ROLE_STRUCT).value<File>().name;
-        qDebug() << "To:";
-        qDebug() << at.data(ROLE_STRUCT).value<File>().name;
+            files << index.data(ROLE_STRUCT).value<File>().path;
+        onMove(files, at.data(ROLE_STRUCT).value<File>().path);
     } else {
-        qDebug() << "Dropped:";
+        QVector<File> files;
         foreach (const QModelIndex &index, rows)
-            qDebug() << index.data(ROLE_STRUCT).value<File>().name;
-        qDebug() << "To:";
-        qDebug() << at.data(ROLE_STRUCT).value<File>().name;
+            files << index.data(ROLE_STRUCT).value<File>();
+        onCopy(files, at.data(ROLE_STRUCT).value<File>().path);
     }
 }
 
@@ -200,15 +228,20 @@ void Storage::onMove()
         return;
     QStringList sources;
     foreach (const File &file, files)
-        sources.append(file.path);
+        sources << file.path;
     bool ok = false;
     QString destination = QInputDialog::getText(this, translate("title_move"), translate("label_move"), QLineEdit::Normal, path->text(), &ok);
     if (!ok || destination.trimmed().isEmpty())
         return;
+    onMove(sources, destination);
+}
+
+void Storage::onMove(const QStringList &files, const QString &destination)
+{
     int result =  QMessageBox::question(this, translate("title_move"), translate("message_move").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    if (ADB::instance()->move(device, sources, destination))
+    if (ADB::instance()->move(device, files, destination))
         onRefresh();
     else
         QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(destination), QMessageBox::Close);
@@ -233,7 +266,7 @@ void Storage::onPull()
     int successful = 0;
     foreach (const File &file, files) {
         if (ADB::instance()->pull(device, file.path, directory.absolutePath())) {
-            if ((file.type == File::FOLDER) ||(file.type == File::SYMLINK_FOLDER))
+            if ((file.type == File::FOLDER) || (file.type == File::SYMLINK_FOLDER))
                 successful++;
             else if (directory.exists(file.name))
                 successful++;

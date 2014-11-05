@@ -2,6 +2,8 @@
 #define VPZ_APKSTUDIO_COMPONENTS_VIDEOS_HPP
 
 #include <QAction>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QTreeWidget>
 #include "helpers/text.hpp"
 

@@ -22,6 +22,7 @@ public:
     QVector<Resources::Application> applications(const QString &) const;
     bool chmod(const QString &, const QString &, const QString &, bool = false) const;
     bool chown(const QString &, const QString &, const QString &, const QString &, bool = false) const;
+    bool copy(const QString &, const QString &, const QString &, bool = false) const;
     bool create(const QString &, const QString &) const;
     QVector<Resources::Device> devices() const;
     bool enable(const QString &, const QString &, bool) const;
