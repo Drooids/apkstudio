@@ -105,17 +105,6 @@ struct Partition {
     QString mount;
 };
 
-enum Reboot {
-    BOOTLOADER = 1,
-    DOWNLOAD,
-    NORMAL,
-    RECOVERY,
-    SAFEMODE,
-    SHUTDOWN,
-    SOFT,
-    ZYGOTE
-};
-
 struct Style {
     bool bold;
     QString color;
@@ -147,7 +136,6 @@ Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Highlight)
 Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Music)
 Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Partition)
 Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Photo)
-Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Reboot)
 Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Style)
 Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Theme)
 Q_DECLARE_METATYPE(VPZ::APKStudio::Resources::Video)

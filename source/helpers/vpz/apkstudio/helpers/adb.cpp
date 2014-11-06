@@ -132,6 +132,80 @@ bool ADB::create(const QString &device, const QString &path) const
     return execute(arguments).isEmpty();
 }
 
+QMap<QString, QString> ADB::details(const QString &device, const Details &type, const char *identifier) const
+{
+    QMap<QString, QString> details;
+    switch(type)
+    {
+    case DETAILS_DEVICE: {
+        QStringList arguments("-s");
+        arguments << device;
+        arguments << "shell";
+        arguments << "dumpsys";
+        arguments << "battery";
+        QStringList battery = execute(arguments);
+        arguments.removeLast();
+        arguments.removeLast();
+        arguments << "df";
+        QStringList disks = execute(arguments);
+        break;
+    }
+    case DETAILS_APPLICATION: {
+        QStringList arguments("-s");
+        arguments << device;
+        arguments << "shell";
+        arguments << "dumpsys";
+        arguments << "package";
+        arguments << identifier;
+        QStringList output = execute(arguments);
+        foreach (const QString &line, output) {
+            if (!line.contains('='))
+                continue;
+            if (line.count('=') >= 2) {
+                QStringList groups = line.split('=');
+                QString previous;
+                foreach (const QString &group, groups) {
+                    if (previous.isEmpty()) {
+                        previous = group.trimmed();
+                        details[previous] = "";
+                        continue;
+                    }
+                    details[previous] = group.section(' ', 0, -2).trimmed();
+                    previous = group.section(' ', -1, -1).trimmed();
+                    details[previous] = "";
+                }
+            } else {
+                QStringList parts = line.split('=');
+                details[parts[0].trimmed()] = parts[1].trimmed();
+            }
+        }
+        identifier = details["codePath"].toStdString().c_str();
+    }
+    case DETAILS_FILE:
+    case DETAILS_MUSIC:
+    case DETAILS_PHOTO:
+    case DETAILS_VIDEO: {
+        QVector<File> files = this->files(device, identifier);
+        if (files.count() != 1)
+            break;
+        File file = files.first();
+        details["group"] = file.group;
+        details["link"] = file.link;
+        details["name"] = file.name;
+        details["owner"] = file.owner;
+        details["path"] = file.path.section(' ', 0, -2);
+        details["display"] = file.permission.display;
+        details["size"] = Format::size(file.size);
+        details["timestamp"] = QString(file.date).append(' ').append(file.time);
+        details["type"] = QString::number(file.type);
+        break;
+    }
+    default:
+        break;
+    }
+    return details;
+}
+
 QVector<Device> ADB::devices() const
 {
     QVector<Device> devices;
@@ -519,7 +593,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
         arguments << "-c";
     }
     switch (mode) {
-    case BOOTLOADER:
+    case REBOOT_BOOTLOADER:
         if (root)
             arguments << "reboot bootloader";
         else {
@@ -527,7 +601,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
             arguments << "bootloader";
         }
         break;
-    case DOWNLOAD:
+    case REBOOT_DOWNLOAD:
         if (root)
             arguments << "reboot download";
         else {
@@ -535,10 +609,10 @@ void ADB::reboot(const QString &device, const Reboot &mode)
             arguments << "download";
         }
         break;
-    case NORMAL:
+    case REBOOT_NORMAL:
         arguments << "reboot";
         break;
-    case RECOVERY:
+    case REBOOT_RECOVERY:
         if (root)
             arguments << "reboot recovery";
         else {
@@ -546,7 +620,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
             arguments << "recovery";
         }
         break;
-    case SAFEMODE:
+    case REBOOT_SAFEMODE:
         if (root)
             arguments << "setprop persist.sys.safemode 1";
         else {
@@ -565,7 +639,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
             arguments << "zygote";
         }
         break;
-    case SHUTDOWN:
+    case REBOOT_SHUTDOWN:
         if (root)
             arguments << "reboot -p";
         else {
@@ -574,7 +648,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
             arguments << "-p";
         }
         break;
-    case SOFT:
+    case REBOOT_SOFT:
         if (root)
             arguments << "killall system_server";
         else {
@@ -583,7 +657,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
             arguments << "system_server";
         }
         break;
-    case ZYGOTE:
+    case REBOOT_ZYGOTE:
         if (root)
             arguments << "setprop ctl.restart zygote";
         else {

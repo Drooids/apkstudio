@@ -1,4 +1,5 @@
 #include "explorer.hpp"
+#include <QDebug>
 
 using namespace VPZ::APKStudio::Components;
 using namespace VPZ::APKStudio::Helpers;

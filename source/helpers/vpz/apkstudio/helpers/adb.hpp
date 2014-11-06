@@ -6,6 +6,7 @@
 #include "resources/constant.hpp"
 #include "resources/variant.hpp"
 #include "cli.hpp"
+#include "format.hpp"
 #include "settings.hpp"
 
 namespace VPZ {
@@ -18,12 +19,31 @@ class ADB : public CLI
 private:
     static ADB *self;
 public:
+    enum Details {
+        DETAILS_APPLICATION = 1,
+        DETAILS_DEVICE,
+        DETAILS_FILE,
+        DETAILS_MUSIC,
+        DETAILS_PHOTO,
+        DETAILS_VIDEO
+    };
+    enum Reboot {
+        REBOOT_BOOTLOADER = 1,
+        REBOOT_DOWNLOAD,
+        REBOOT_NORMAL,
+        REBOOT_RECOVERY,
+        REBOOT_SAFEMODE,
+        REBOOT_SHUTDOWN,
+        REBOOT_SOFT,
+        REBOOT_ZYGOTE
+    };
     explicit ADB(QObject * = 0);
     QVector<Resources::Application> applications(const QString &) const;
     bool chmod(const QString &, const QString &, const QString &, bool = false) const;
     bool chown(const QString &, const QString &, const QString &, const QString &, bool = false) const;
     bool copy(const QString &, const QString &, const QString &, bool = false) const;
     bool create(const QString &, const QString &) const;
+    QMap<QString, QString> details(const QString &, const Details &, const char *) const;
     QVector<Resources::Device> devices() const;
     bool enable(const QString &, const QString &, bool) const;
     QVector<Resources::File> files(const QString &, const QString &) const;
@@ -40,7 +60,7 @@ public:
     bool push(const QString &, const QString &, const QString &) const;
     QString quote(const QString &) const;
     QString quote(const QStringList &) const;
-    void reboot(const QString &, const Resources::Reboot &);
+    void reboot(const QString &, const Reboot &);
     bool rename(const QString &, const QString &, const QString &) const;
     bool remount(const QString &, const Resources::Partition &);
     bool remove(const QString &, const QString &, bool = false) const;

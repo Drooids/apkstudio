@@ -95,13 +95,13 @@ Devices::Devices(QWidget *parent) :
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, BOOTLOADER);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_BOOTLOADER);
     }));
     connections.append(connect(download, &QAction::triggered, [ this ] () {
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, DOWNLOAD);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_DOWNLOAD);
     }));
     connections.append(connect(explore, SIGNAL(triggered()), this, SLOT(onExplore())));
     connections.append(connect(information, SIGNAL(triggered()), this, SLOT(onInformation())));
@@ -113,13 +113,13 @@ Devices::Devices(QWidget *parent) :
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, NORMAL);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_NORMAL);
     }));
     connections.append(connect(recovery, &QAction::triggered, [ this ] () {
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, RECOVERY);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_RECOVERY);
     }));
     connections.append(connect(refresh, SIGNAL(triggered()), this, SLOT(onRefresh())));
     connections.append(connect(restart, &QAction::triggered, [ ] () {
@@ -130,7 +130,7 @@ Devices::Devices(QWidget *parent) :
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, SAFEMODE);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_SAFEMODE);
     }));
     connections.append(connect(screenshot, SIGNAL(triggered()), this, SLOT(onScreenshot())));
     connections.append(connect(shell, SIGNAL(triggered()), this, SLOT(onShell())));
@@ -138,19 +138,19 @@ Devices::Devices(QWidget *parent) :
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, SHUTDOWN);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_SHUTDOWN);
     }));
     connections.append(connect(soft, &QAction::triggered, [ this ] () {
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, SOFT);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_SOFT);
     }));
     connections.append(connect(zygote, &QAction::triggered, [ this ] () {
         Device device = this->selected();
         if ((device.serial.isEmpty()) || (device.status != Device::ONLINE))
             return;
-        ADB::instance()->reboot(device.serial, ZYGOTE);
+        ADB::instance()->reboot(device.serial, ADB::REBOOT_ZYGOTE);
     }));
     connections.append(connect(start, &QAction::triggered, [ ] () {
         ADB::instance()->start();
