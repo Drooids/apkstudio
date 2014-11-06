@@ -1,5 +1,4 @@
 #include "adb.hpp"
-#include <QDebug>
 
 using namespace VPZ::APKStudio::Resources;
 
@@ -68,7 +67,7 @@ bool ADB::chmod(const QString &device, const QString &path, const QString &mode,
     if (Settings::rootShell()) {
         arguments << "su";
         arguments << "-c";
-        arguments << QString(recurse ? "chmod -R %1 \"%2\"" : "chmod %1 \"%2\"").arg(mode, path);
+        arguments << QString(recurse ? "chmod -R %1 %2" : "chmod %1 %2").arg(mode, quote(path));
     } else {
         arguments << "chmod";
         if (recurse)
@@ -87,7 +86,7 @@ bool ADB::chown(const QString &device, const QString &path, const QString &owner
     if (Settings::rootShell()) {
         arguments << "su";
         arguments << "-c";
-        arguments << QString(recurse ? "chown -R %2 \"%3\"" : "chmod %2 \"%3\"").arg(QString("%1:%2").arg(owner, group), path);
+        arguments << QString(recurse ? "chown -R %1:%2 %3" : "chown %1:%2 %3").arg(owner, group, quote(path));
     } else {
         arguments << "chown";
         if (recurse)
@@ -106,7 +105,7 @@ bool ADB::copy(const QString &device, const QString &source, const QString &dest
     if (Settings::rootShell()) {
         arguments << "su";
         arguments << "-c";
-        arguments << QString(recursive ? "cp -R %1 %2" : "cp %1 %2").arg(source, destination);
+        arguments << QString(recursive ? "cp -R %1 %2" : "cp %1 %2").arg(quote(source), quote(destination));
     } else {
         arguments << "cp";
         if (recursive)
@@ -188,7 +187,7 @@ QVector<File> ADB::files(const QString &device, const QString &path) const
     if (Settings::rootShell()) {
         arguments << "su";
         arguments << "-c";
-        arguments << QString("ls -l \"%1\"").arg(path);
+        arguments << QString("ls -l %1").arg(quote(path));
     } else {
         arguments << "ls";
         arguments << "-l";
@@ -313,10 +312,10 @@ bool ADB::move(const QString &device, const QStringList &source, const QString &
     if (Settings::rootShell()) {
         arguments << "su";
         arguments << "-c";
-        arguments << QString("mv %1 %2").arg(source.join(' '), destination);
+        arguments << QString("mv %1 %2").arg(quote(source), quote(destination));
     } else {
         arguments << "mv";
-        arguments << source;
+        arguments << source.join(' ');
         arguments << destination;
     }
     return execute(arguments).isEmpty();
@@ -492,6 +491,23 @@ bool ADB::push(const QString &device, const QString &source, const QString &dest
     return true;
 }
 
+QString ADB::quote(const QString &text) const
+{
+    return quote(QStringList(text));
+}
+
+QString ADB::quote(const QStringList &text) const
+{
+    int i = 0;
+    QString quoted;
+    foreach (const QString &segment, text) {
+        if (i++ == 0)
+            quoted += ' ';
+        quoted += ("\\\"" + segment + "\\\"");
+    }
+    return quoted;
+}
+
 void ADB::reboot(const QString &device, const Reboot &mode)
 {
     QStringList arguments("-s");
@@ -579,7 +595,7 @@ bool ADB::remove(const QString &device, const QString &path, bool recurse) const
     if (Settings::rootShell()) {
         arguments << "su";
         arguments << "-c";
-        arguments << QString(recurse ? "rm -R \"%1\"" : "rm \"%1\"").arg(path);
+        arguments << QString(recurse ? "rm -R %1" : "rm %1").arg(quote(path));
     } else {
         arguments << "rm";
         if (recurse)
@@ -597,7 +613,7 @@ bool ADB::rename(const QString &device, const QString &source, const QString &de
     if (Settings::rootShell()) {
         arguments << "su";
         arguments << "-c";
-        arguments << QString("mv \"%1\" \"%2\"").arg(source, destination);
+        arguments << QString("mv %1 %2").arg(quote(source), quote(destination));
     } else {
         arguments << "mv";
         arguments << source;

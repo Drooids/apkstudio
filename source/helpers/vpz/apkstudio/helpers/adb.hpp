@@ -38,6 +38,8 @@ public:
     QMap<QString, QString> properties(const QString &) const;
     bool pull(const QString &, const QString &, const QString &) const;
     bool push(const QString &, const QString &, const QString &) const;
+    QString quote(const QString &) const;
+    QString quote(const QStringList &) const;
     void reboot(const QString &, const Resources::Reboot &);
     bool rename(const QString &, const QString &, const QString &) const;
     bool remount(const QString &, const Resources::Partition &);
