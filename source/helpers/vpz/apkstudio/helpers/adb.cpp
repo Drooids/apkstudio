@@ -550,6 +550,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
         if (root)
             arguments << "setprop persist.sys.safemode 1";
         else {
+            arguments << "shell";
             arguments << "setprop";
             arguments << "persist.sys.safemode";
             arguments << "1";
@@ -568,6 +569,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
         if (root)
             arguments << "reboot -p";
         else {
+            arguments << "shell";
             arguments << "reboot";
             arguments << "-p";
         }
@@ -576,6 +578,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
         if (root)
             arguments << "killall system_server";
         else {
+            arguments << "shell";
             arguments << "killall";
             arguments << "system_server";
         }
@@ -584,6 +587,7 @@ void ADB::reboot(const QString &device, const Reboot &mode)
         if (root)
             arguments << "setprop ctl.restart zygote";
         else {
+            arguments << "shell";
             arguments << "setprop";
             arguments << "ctl.restart";
             arguments << "zygote";
