@@ -3,6 +3,7 @@
 
 #include <QAction>
 #include <QMessageBox>
+#include <QShortcut>
 #include <QTreeWidget>
 #include "helpers/adb.hpp"
 #include "helpers/text.hpp"

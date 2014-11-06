@@ -1,5 +1,4 @@
 #include "storage.hpp"
-#include <QDebug>
 
 using namespace VPZ::APKStudio::Helpers;
 using namespace VPZ::APKStudio::Resources;
@@ -124,7 +123,7 @@ void Storage::onCopy(const QVector<File> &files, const QString &destination)
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(failed, successful), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Storage::onCreate()
@@ -194,7 +193,7 @@ void Storage::onFilesDropped(const QStringList &files, const QModelIndex &at)
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_push_failed").arg(successful, failed), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_push_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
     if (successful >= 1)
         onRefresh();
 }
@@ -276,7 +275,7 @@ void Storage::onPull()
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(successful, failed), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Storage::onPush()
@@ -403,7 +402,7 @@ void Storage::onRemove()
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(successful, failed), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Storage::onRename()
@@ -442,7 +441,7 @@ void Storage::onRename()
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(successful, failed), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Storage::onReturn()

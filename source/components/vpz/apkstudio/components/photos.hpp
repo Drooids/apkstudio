@@ -2,8 +2,10 @@
 #define VPZ_APKSTUDIO_COMPONENTS_PHOTOS_HPP
 
 #include <QAction>
+#include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QShortcut>
 #include <QTreeWidget>
 #include "helpers/adb.hpp"
 #include "helpers/format.hpp"
@@ -28,6 +30,7 @@ private:
     void onPull();
     void onRemove();
     void onRename();
+    QVector<Resources::Photo> selected();
     static QString translate(const char *key) {
         return Helpers::Text::translate("photos", key);
     }

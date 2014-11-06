@@ -96,5 +96,6 @@
         <file>icon/lock_unlock.png</file>
         <file>icon/lock_warning.png</file>
         <file>icon/music.png</file>
+        <file>icon/film.png</file>
     </qresource>
 </RCC>

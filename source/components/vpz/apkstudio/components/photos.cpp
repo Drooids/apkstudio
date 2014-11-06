@@ -26,6 +26,13 @@ Photos::Photos(const QString &device, QWidget *parent) :
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSortingEnabled(true);
     sortByColumn(3, Qt::DescendingOrder);
+    // -- //
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_C), this, SLOT(onCopy()));
+    new QShortcut(QKeySequence(Qt::Key_Return), this, SLOT(onDetails()));
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_X), this, SLOT(onMove()));
+    new QShortcut(QKeySequence(Qt::Key_F5), this, SLOT(onRefresh()));
+    new QShortcut(QKeySequence(Qt::Key_F2), this, SLOT(onRename()));
+    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(onRemove()));
 }
 
 void Photos::onAction(QAction *action)
@@ -55,6 +62,26 @@ void Photos::onAction(QAction *action)
 
 void Photos::onCopy()
 {
+    QVector<Photo> files = selected();
+    if (files.isEmpty())
+        return;
+    bool ok = false;
+    QString destination = QInputDialog::getText(this, translate("title_copy"), translate("label_copy"), QLineEdit::Normal, "/", &ok);
+    if (!ok || destination.trimmed().isEmpty())
+        return;
+    int result =  QMessageBox::question(this, translate("title_copy"), translate("message_copy").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    int failed = 0;
+    int successful = 0;
+    foreach (const Photo &file, files) {
+        if (ADB::instance()->copy(device, file.path, destination, false))
+            successful++;
+        else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Photos::onDetails()
@@ -63,10 +90,50 @@ void Photos::onDetails()
 
 void Photos::onMove()
 {
+    QVector<Photo> files = selected();
+    if (files.isEmpty())
+        return;
+    QStringList sources;
+    foreach (const Photo &file, files)
+        sources << file.path;
+    bool ok = false;
+    QString destination = QInputDialog::getText(this, translate("title_move"), translate("label_move"), QLineEdit::Normal, "/", &ok);
+    if (!ok || destination.trimmed().isEmpty())
+        return;
+    int result =  QMessageBox::question(this, translate("title_move"), translate("message_move").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    if (ADB::instance()->move(device, sources, destination))
+        onRefresh();
+    else
+        QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(destination), QMessageBox::Close);
 }
 
 void Photos::onPull()
 {
+    QVector<Photo> files = selected();
+    if (files.isEmpty())
+        return;
+    QFileDialog dialog(this, translate("title_browse"), Helpers::Settings::previousDirectory());
+    dialog.setAcceptMode(QFileDialog::AcceptOpen);
+    dialog.setFileMode(QFileDialog::Directory);
+    if (dialog.exec() != QFileDialog::Accepted)
+        return;
+    QStringList folders = dialog.selectedFiles();
+    if (folders.count() != 1)
+        return;
+    QDir directory(folders.first());
+    Helpers::Settings::previousDirectory(directory.absolutePath());
+    int failed = 0;
+    int successful = 0;
+    foreach (const Photo &file, files) {
+        if (ADB::instance()->pull(device, file.path, directory.absolutePath()))
+            successful++;
+        else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Photos::onRefresh()
@@ -91,10 +158,73 @@ void Photos::onRefresh()
 
 void Photos::onRemove()
 {
+    QVector<Photo> files = selected();
+    if (files.isEmpty())
+        return;
+    int result =  QMessageBox::question(this, translate("title_remove"), translate("message_remove").arg(QString::number(files.count())), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    int failed = 0;
+    int successful = 0;
+    foreach (const Photo &file, files) {
+        if (ADB::instance()->remove(device, file.path, false)) {
+            successful++;
+            QList<QTreeWidgetItem *> rows = findItems(file.name, Qt::MatchExactly, 0);
+            if (rows.count() != 1)
+                continue;
+            delete rows.first();
+        } else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Photos::onRename()
 {
+    QVector<Photo> files = selected();
+    if (files.isEmpty())
+        return;
+    bool ok = false;
+    QString name = QInputDialog::getText(this, translate("title_rename"), translate("label_rename"), QLineEdit::Normal, files.first().name, &ok);
+    if (!ok || name.trimmed().isEmpty())
+        return;
+    bool multiple = (files.count() > 1);
+    int failed = 0;
+    int successful = 0;
+    for (int i = 0; i < files.count(); ++i) {
+        QString newname(name);
+        if (multiple)
+            newname.prepend(QString("(%1) ").arg(QString::number(i + 1)));
+        Photo file = files.at(i);
+        QString newpath(file.path.section('/', 0, -2));
+        newpath.append('/');
+        newpath.append(newname);
+        if (ADB::instance()->rename(device, file.path, newpath)) {
+            successful++;
+            QList<QTreeWidgetItem *> rows = findItems(file.name, Qt::MatchExactly, 0);
+            if (rows.count() != 1)
+                continue;
+            file.name = newname;
+            file.path = newpath;
+            QTreeWidgetItem *row = rows.first();
+            for (int i = 0; i < 6; ++i)
+                row->setData(i, ROLE_STRUCT, QVariant::fromValue(file));
+            row->setText(0, newname);
+            row->setToolTip(0, newpath);
+        } else
+            failed++;
+    }
+    if (failed >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+}
+
+QVector<Photo> Photos::selected()
+{
+    QVector<Photo> files;
+    foreach (QTreeWidgetItem *item, selectedItems())
+        files.append(item->data(0, ROLE_STRUCT).value<Photo>());
+    return files;
 }
 
 Photos::~Photos()

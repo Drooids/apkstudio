@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QShortcut>
 #include <QTreeWidget>
 #include "helpers/adb.hpp"
 #include "helpers/format.hpp"

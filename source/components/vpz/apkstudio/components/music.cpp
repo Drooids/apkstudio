@@ -25,6 +25,13 @@ Music::Music(const QString &device, QWidget *parent) :
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSortingEnabled(true);
     sortByColumn(3, Qt::DescendingOrder);
+    // -- //
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_C), this, SLOT(onCopy()));
+    new QShortcut(QKeySequence(Qt::Key_Return), this, SLOT(onDetails()));
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_X), this, SLOT(onMove()));
+    new QShortcut(QKeySequence(Qt::Key_F5), this, SLOT(onRefresh()));
+    new QShortcut(QKeySequence(Qt::Key_F2), this, SLOT(onRename()));
+    new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(onRemove()));
 }
 
 void Music::onAction(QAction *action)
@@ -73,7 +80,7 @@ void Music::onCopy()
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(failed, successful), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Music::onDetails()
@@ -125,7 +132,7 @@ void Music::onPull()
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(successful, failed), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Music::onRefresh()
@@ -169,7 +176,7 @@ void Music::onRemove()
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(successful, failed), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Music::onRename()
@@ -208,7 +215,7 @@ void Music::onRename()
             failed++;
     }
     if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(successful, failed), QMessageBox::Close);
+        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 QVector<Resources::Music> Music::selected()

@@ -28,7 +28,9 @@ Applications::Applications(const QString &device, QWidget *parent) :
     setSortingEnabled(true);
     sortByColumn(0, Qt::AscendingOrder);
     // -- //
+    new QShortcut(QKeySequence(Qt::Key_Return), this, SLOT(onDetails()));
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_I), this, SLOT(onInstall()));
+    new QShortcut(QKeySequence(Qt::Key_F5), this, SLOT(onRefresh()));
     new QShortcut(QKeySequence(Qt::Key_Delete), this, SLOT(onUninstall()));
 }
 

@@ -127,6 +127,7 @@ struct Video {
     int duration;
     QString name;
     QString path;
+    long size;
     long time;
     int width;
 };

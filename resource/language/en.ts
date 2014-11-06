@@ -778,6 +778,74 @@
         <source>header_time</source>
         <translation>Time</translation>
     </message>
+    <message>
+        <source>label_copy</source>
+        <translation>Enter destination path to copy files to</translation>
+    </message>
+    <message>
+        <source>label_move</source>
+        <translation>Enter destination path to move files to</translation>
+    </message>
+    <message>
+        <source>label_rename</source>
+        <translation>Enter new file name</translation>
+    </message>
+    <message>
+        <source>message_copy</source>
+        <translation>Do you really wish to copy %1 file(s) to %2?</translation>
+    </message>
+    <message>
+        <source>message_copy_failed</source>
+        <translation>Successfully copied: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_move</source>
+        <translation>Do you really wish to move %1 file(s) to %2?</translation>
+    </message>
+    <message>
+        <source>message_move_failed</source>
+        <translation>Failed to move all or few of selected file(s) to %1</translation>
+    </message>
+    <message>
+        <source>message_pull_failed</source>
+        <translation>Successfully pulled: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_remove</source>
+        <translation>Do you really wish to remove %1 file(s)/folder(s)?</translation>
+    </message>
+    <message>
+        <source>message_remove_failed</source>
+        <translation>Successfully removed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_rename_failed</source>
+        <translation>Successfully renamed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>title_browse</source>
+        <translation>Select Folder</translation>
+    </message>
+    <message>
+        <source>title_copy</source>
+        <translation>Copy Song(s)</translation>
+    </message>
+    <message>
+        <source>title_failure</source>
+        <translation>Failure</translation>
+    </message>
+    <message>
+        <source>title_move</source>
+        <translation>Move Song(s)</translation>
+    </message>
+    <message>
+        <source>title_remove</source>
+        <translation>Remove</translation>
+    </message>
+    <message>
+        <source>title_rename</source>
+        <translation>Rename Song(s)</translation>
+    </message>
 </context>
 <context>
     <name>outline</name>
@@ -873,6 +941,74 @@
     <message>
         <source>header_time</source>
         <translation>Time</translation>
+    </message>
+    <message>
+        <source>label_copy</source>
+        <translation>Enter destination path to copy files to</translation>
+    </message>
+    <message>
+        <source>label_move</source>
+        <translation>Enter destination path to move files to</translation>
+    </message>
+    <message>
+        <source>label_rename</source>
+        <translation>Enter new file name</translation>
+    </message>
+    <message>
+        <source>message_copy</source>
+        <translation>Do you really wish to copy %1 file(s) to %2?</translation>
+    </message>
+    <message>
+        <source>message_copy_failed</source>
+        <translation>Successfully copied: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_move</source>
+        <translation>Do you really wish to move %1 file(s) to %2?</translation>
+    </message>
+    <message>
+        <source>message_move_failed</source>
+        <translation>Failed to move all or few of selected file(s) to %1</translation>
+    </message>
+    <message>
+        <source>message_pull_failed</source>
+        <translation>Successfully pulled: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_remove</source>
+        <translation>Do you really wish to remove %1 file(s)/folder(s)?</translation>
+    </message>
+    <message>
+        <source>message_remove_failed</source>
+        <translation>Successfully removed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_rename_failed</source>
+        <translation>Successfully renamed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>title_browse</source>
+        <translation>Select Folder</translation>
+    </message>
+    <message>
+        <source>title_copy</source>
+        <translation>Copy Photo(s)</translation>
+    </message>
+    <message>
+        <source>title_failure</source>
+        <translation>Failure</translation>
+    </message>
+    <message>
+        <source>title_move</source>
+        <translation>Move Photo(s)</translation>
+    </message>
+    <message>
+        <source>title_remove</source>
+        <translation>Remove</translation>
+    </message>
+    <message>
+        <source>title_rename</source>
+        <translation>Rename Photo(s)</translation>
     </message>
 </context>
 <context>
@@ -1116,12 +1252,12 @@
         <translation>Successfully pushed: %1, failed: %2</translation>
     </message>
     <message>
-        <source>message_remove_failed</source>
-        <translation>Successfully removed: %1, failed: %2</translation>
-    </message>
-    <message>
         <source>message_remove</source>
         <translation>Do you really wish to remove %1 file(s)/folder(s)?</translation>
+    </message>
+    <message>
+        <source>message_remove_failed</source>
+        <translation>Successfully removed: %1, failed: %2</translation>
     </message>
     <message>
         <source>message_rename_failed</source>
@@ -1138,6 +1274,10 @@
     <message>
         <source>title_create</source>
         <translation>Create New Folder</translation>
+    </message>
+    <message>
+        <source>title_failure</source>
+        <translation>Failure</translation>
     </message>
     <message>
         <source>title_move</source>
@@ -1158,10 +1298,6 @@
     <message>
         <source>title_select</source>
         <translation>Select Files</translation>
-    </message>
-    <message>
-        <source>title_failure</source>
-        <translation>Failure</translation>
     </message>
 </context>
 <context>
@@ -1247,6 +1383,74 @@
     <message>
         <source>header_time</source>
         <translation>Time</translation>
+    </message>
+    <message>
+        <source>label_copy</source>
+        <translation>Enter destination path to copy files to</translation>
+    </message>
+    <message>
+        <source>label_move</source>
+        <translation>Enter destination path to move files to</translation>
+    </message>
+    <message>
+        <source>label_rename</source>
+        <translation>Enter new file name</translation>
+    </message>
+    <message>
+        <source>message_copy</source>
+        <translation>Do you really wish to copy %1 file(s) to %2?</translation>
+    </message>
+    <message>
+        <source>message_copy_failed</source>
+        <translation>Successfully copied: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_move</source>
+        <translation>Do you really wish to move %1 file(s) to %2?</translation>
+    </message>
+    <message>
+        <source>message_move_failed</source>
+        <translation>Failed to move all or few of selected file(s) to %1</translation>
+    </message>
+    <message>
+        <source>message_pull_failed</source>
+        <translation>Successfully pulled: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_remove</source>
+        <translation>Do you really wish to remove %1 file(s)/folder(s)?</translation>
+    </message>
+    <message>
+        <source>message_remove_failed</source>
+        <translation>Successfully removed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>message_rename_failed</source>
+        <translation>Successfully renamed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>title_browse</source>
+        <translation>Select Folder</translation>
+    </message>
+    <message>
+        <source>title_copy</source>
+        <translation>Copy Video(s)</translation>
+    </message>
+    <message>
+        <source>title_failure</source>
+        <translation>Failure</translation>
+    </message>
+    <message>
+        <source>title_move</source>
+        <translation>Move Video(s)</translation>
+    </message>
+    <message>
+        <source>title_remove</source>
+        <translation>Remove</translation>
+    </message>
+    <message>
+        <source>title_rename</source>
+        <translation>Rename Video(s)</translation>
     </message>
 </context>
 <context>

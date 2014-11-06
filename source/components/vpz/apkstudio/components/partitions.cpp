@@ -23,6 +23,8 @@ Partitions::Partitions(const QString &device, QWidget *parent) :
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSortingEnabled(true);
     sortByColumn(3, Qt::DescendingOrder);
+    // -- //
+    new QShortcut(QKeySequence(Qt::Key_F5), this, SLOT(onRefresh()));
 }
 
 void Partitions::onAction(QAction *action)

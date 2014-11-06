@@ -324,8 +324,8 @@ bool ADB::move(const QString &device, const QStringList &source, const QString &
 QVector<Music> ADB::music(const QString &device) const
 {
     QVector<Music> musics;
-    QStringList projection("duration");
-    projection << "date_modified" << "_size" << "_data";
+    QStringList projection("date_modified");
+    projection << "duration" << "_size" << "_data";
     QStringList arguments("-s");
     arguments << device;
     arguments << "shell";
@@ -348,12 +348,12 @@ QVector<Music> ADB::music(const QString &device) const
             QRegularExpressionMatch match = iterator.next();
             QString column = match.captured(1);
             QString value = match.captured(2);
-            if (QString::compare("duration", column, Qt::CaseInsensitive) == 0)
+            if (QString::compare("date_modified", column, Qt::CaseInsensitive) == 0)
+                music.time = value.toLong();
+            else if (QString::compare("duration", column, Qt::CaseInsensitive) == 0)
                 music.duration = value.toInt();
             else if (QString::compare("_size", column, Qt::CaseInsensitive) == 0)
                 music.size = value.toLong();
-            else if (QString::compare("date_modified", column, Qt::CaseInsensitive) == 0)
-                music.time = value.toLong();
         }
         music.path = file.split(", _data=").at(1).trimmed();
         if (music.path.startsWith("/data") || music.path.startsWith("/system"))
@@ -397,8 +397,8 @@ QVector<Partition> ADB::partitions(const QString &device) const
 QVector<Photo> ADB::photos(const QString &device) const
 {
     QVector<Photo> photos;
-    QStringList projection("height");
-    projection << "width" << "date_modified" << "_size" << "_data";
+    QStringList projection("date_modified");
+    projection << "height" << "width" << "_size" << "_data";
     QStringList arguments("-s");
     arguments << device;
     arguments << "shell";
@@ -708,8 +708,48 @@ bool ADB::unmount(const QString &device, const Partition &partition) const
 
 QVector<Video> ADB::videos(const QString &device) const
 {
-    Q_UNUSED(device);
     QVector<Video> videos;
+    QStringList projection("date_modified");
+    projection << "duration" << "height" << "_size" << "width" << "_data";
+    QStringList arguments("-s");
+    arguments << device;
+    arguments << "shell";
+    arguments << "content";
+    arguments << "query";
+    arguments << "--projection";
+    arguments << projection.join(':');
+    arguments << "--uri";
+    QStringList files;
+    files << execute(QStringList(arguments) << "content://media/external/video/media/");
+    files << execute(QStringList(arguments) << "content://media/internal/video/media/");
+    files.removeDuplicates();
+    QRegularExpression regex = QRegularExpression(REGEX_PAIR);
+    foreach (const QString &file, files) {
+        QRegularExpressionMatchIterator iterator = regex.globalMatch(file);
+        if (!iterator.hasNext())
+            continue;
+        Video video;
+        while (iterator.hasNext()) {
+            QRegularExpressionMatch match = iterator.next();
+            QString column = match.captured(1);
+            QString value = match.captured(2);
+            if (QString::compare("date_modified", column, Qt::CaseInsensitive) == 0)
+                video.time = value.toLong();
+            else if (QString::compare("duration", column, Qt::CaseInsensitive) == 0)
+                video.duration = value.toInt();
+            else if (QString::compare("height", column, Qt::CaseInsensitive) == 0)
+                video.height = value.toInt();
+            else if (QString::compare("_size", column, Qt::CaseInsensitive) == 0)
+                video.size = value.toLong();
+            else if (QString::compare("width", column, Qt::CaseInsensitive) == 0)
+                video.width = value.toInt();
+        }
+        video.path = file.split(", _data=").at(1).trimmed();
+        if (video.path.startsWith("/data") || video.path.startsWith("/system"))
+            continue;
+        video.name = video.path.section('/', -1, -1);
+        videos.append(video);
+    }
     return videos;
 }
 
