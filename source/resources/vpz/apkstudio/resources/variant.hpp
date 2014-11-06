@@ -106,7 +106,8 @@ struct Partition {
 };
 
 enum Reboot {
-    BOOTLOADER,
+    BOOTLOADER = 1,
+    DOWNLOAD,
     NORMAL,
     RECOVERY,
     SAFEMODE,

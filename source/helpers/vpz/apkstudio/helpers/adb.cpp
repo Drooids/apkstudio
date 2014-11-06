@@ -510,47 +510,84 @@ QString ADB::quote(const QStringList &text) const
 
 void ADB::reboot(const QString &device, const Reboot &mode)
 {
+    int root = Settings::rootShell();
     QStringList arguments("-s");
     arguments << device;
-    arguments << "shell";
-    if (Settings::rootShell()) {
+    if (root) {
+        arguments << "shell";
         arguments << "su";
         arguments << "-c";
     }
-    arguments << "reboot";
     switch (mode) {
-    case NORMAL:
-        break;
     case BOOTLOADER:
-        arguments << "bootloader";
+        if (root)
+            arguments << "reboot bootloader";
+        else {
+            arguments << "reboot";
+            arguments << "bootloader";
+        }
+        break;
+    case DOWNLOAD:
+        if (root)
+            arguments << "reboot download";
+        else {
+            arguments << "reboot";
+            arguments << "download";
+        }
+        break;
+    case NORMAL:
+        arguments << "reboot";
         break;
     case RECOVERY:
-        arguments << "recovery";
+        if (root)
+            arguments << "reboot recovery";
+        else {
+            arguments << "reboot";
+            arguments << "recovery";
+        }
         break;
     case SAFEMODE:
-        arguments.removeLast();
-        arguments << "setprop";
-        arguments << "persist.sys.safemode";
-        arguments << "1";
+        if (root)
+            arguments << "setprop persist.sys.safemode 1";
+        else {
+            arguments << "setprop";
+            arguments << "persist.sys.safemode";
+            arguments << "1";
+        }
         execute(arguments);
         arguments.removeLast();
-        arguments.removeLast();
-        arguments << "ctl.restart";
-        arguments << "zygote";
+        if (root)
+            arguments << "setprop ctl.restart zygote";
+        else {
+            arguments.removeLast();
+            arguments << "ctl.restart";
+            arguments << "zygote";
+        }
         break;
     case SHUTDOWN:
-        arguments << "-p";
+        if (root)
+            arguments << "reboot -p";
+        else {
+            arguments << "reboot";
+            arguments << "-p";
+        }
         break;
     case SOFT:
-        arguments.removeLast();
-        arguments << "killall";
-        arguments << "system_server";
+        if (root)
+            arguments << "killall system_server";
+        else {
+            arguments << "killall";
+            arguments << "system_server";
+        }
         break;
     case ZYGOTE:
-        arguments.removeLast();
-        arguments << "setprop";
-        arguments << "ctl.restart";
-        arguments << "zygote";
+        if (root)
+            arguments << "setprop ctl.restart zygote";
+        else {
+            arguments << "setprop";
+            arguments << "ctl.restart";
+            arguments << "zygote";
+        }
         break;
     }
     execute(arguments);

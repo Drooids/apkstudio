@@ -130,6 +130,14 @@
         <translation>ADB Control</translation>
     </message>
     <message>
+        <source>item_bootloader</source>
+        <translation>Bootloader</translation>
+    </message>
+    <message>
+        <source>item_download</source>
+        <translation>Download Mode</translation>
+    </message>
+    <message>
         <source>item_explore</source>
         <translation>Explore Storage</translation>
     </message>
@@ -146,6 +154,18 @@
         <translation>View Logcat</translation>
     </message>
     <message>
+        <source>item_normal</source>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>item_reboot</source>
+        <translation>Reboot</translation>
+    </message>
+    <message>
+        <source>item_recovery</source>
+        <translation>Recovery</translation>
+    </message>
+    <message>
         <source>item_refresh</source>
         <translation>Refresh devices list</translation>
     </message>
@@ -158,16 +178,32 @@
         <translation>Take screenshot</translation>
     </message>
     <message>
+        <source>item_safemode</source>
+        <translation>Safe Mode</translation>
+    </message>
+    <message>
         <source>item_shell</source>
-        <translation>Open shell over ADB</translation>
+        <translation>Open ADB shell</translation>
+    </message>
+    <message>
+        <source>item_shutdown</source>
+        <translation>Shutdown</translation>
+    </message>
+    <message>
+        <source>item_soft</source>
+        <translation>Soft Reboot</translation>
     </message>
     <message>
         <source>item_start</source>
         <translation>Start</translation>
     </message>
     <message>
+        <source>item_zygote</source>
+        <translation>Kill Zygote</translation>
+    </message>
+    <message>
         <source>status_bootloader</source>
-        <translation>Boot-Loader</translation>
+        <translation>Bootloader</translation>
     </message>
     <message>
         <source>status_offline</source>
@@ -188,6 +224,10 @@
     <message>
         <source>tooltip_adb</source>
         <translation>Start/stop ADB server</translation>
+    </message>
+    <message>
+        <source>tooltip_reboot</source>
+        <translation>Reboot/restart phone</translation>
     </message>
     <message>
         <source>type_emulator</source>
@@ -1301,6 +1341,13 @@
     </message>
 </context>
 <context>
+    <name>tasks</name>
+    <message>
+        <source>title_dock</source>
+        <translation>Tasks</translation>
+    </message>
+</context>
+<context>
     <name>toolbar</name>
     <message>
         <source>item_build</source>
@@ -1353,13 +1400,6 @@
     <message>
         <source>item_windowed</source>
         <translation>Windowed</translation>
-    </message>
-</context>
-<context>
-    <name>tasks</name>
-    <message>
-        <source>title_dock</source>
-        <translation>Tasks</translation>
     </message>
 </context>
 <context>

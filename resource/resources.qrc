@@ -97,5 +97,6 @@
         <file>icon/lock_warning.png</file>
         <file>icon/music.png</file>
         <file>icon/film.png</file>
+        <file>icon/mobile_phone_restart.png</file>
     </qresource>
 </RCC>
