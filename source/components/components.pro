@@ -31,10 +31,10 @@ HEADERS += \
     vpz/apkstudio/components/music.hpp \
     vpz/apkstudio/components/photos.hpp \
     vpz/apkstudio/components/videos.hpp \
-    vpz/apkstudio/components/information.hpp \
     vpz/apkstudio/components/partitions.hpp \
     vpz/apkstudio/components/clearable.hpp \
-    vpz/apkstudio/components/treewidget.hpp
+    vpz/apkstudio/components/treewidget.hpp \
+    vpz/apkstudio/components/task.hpp
 
 SOURCES += \
     vpz/apkstudio/components/coder.cpp \
@@ -59,10 +59,10 @@ SOURCES += \
     vpz/apkstudio/components/music.cpp \
     vpz/apkstudio/components/photos.cpp \
     vpz/apkstudio/components/videos.cpp \
-    vpz/apkstudio/components/information.cpp \
     vpz/apkstudio/components/partitions.cpp \
     vpz/apkstudio/components/clearable.cpp \
-    vpz/apkstudio/components/treewidget.cpp
+    vpz/apkstudio/components/treewidget.cpp \
+    vpz/apkstudio/components/task.cpp
 
 # Include referenced co-projects & libraries
 win32 {

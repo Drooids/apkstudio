@@ -19,12 +19,11 @@ class ADB : public CLI
 private:
     static ADB *self;
 public:
-    enum Details {
+    enum {
         DETAILS_APPLICATION = 1,
-        DETAILS_DEVICE,
         DETAILS_FILE
     };
-    enum Reboot {
+    enum {
         REBOOT_BOOTLOADER = 1,
         REBOOT_DOWNLOAD,
         REBOOT_NORMAL,
@@ -40,7 +39,7 @@ public:
     bool chown(const QString &, const QString &, const QString &, const QString &, bool = false) const;
     bool copy(const QString &, const QString &, const QString &, bool = false) const;
     bool create(const QString &, const QString &) const;
-    QMap<QString, QString> details(const QString &, const Details &, const QString &) const;
+    QMap<QString, QString> details(const QString &, const int, const QString &) const;
     QVector<Resources::Device> devices() const;
     bool enable(const QString &, const QString &, bool) const;
     QVector<Resources::File> files(const QString &, const QString &) const;
@@ -57,10 +56,10 @@ public:
     bool push(const QString &, const QString &, const QString &) const;
     QString quote(const QString &) const;
     QString quote(const QStringList &) const;
-    void reboot(const QString &, const Reboot &);
-    bool rename(const QString &, const QString &, const QString &) const;
+    void reboot(const QString &, const int);
     bool remount(const QString &, const Resources::Partition &);
     bool remove(const QString &, const QString &, bool = false) const;
+    bool rename(const QString &, const QString &, const QString &) const;
     void screenshot(const QString &, const QString &);
     void shell(const QString &);
     void start();

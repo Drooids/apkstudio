@@ -9,14 +9,14 @@ namespace Windows {
 File::File(const QString &device, const QString &path, QWidget *parent) :
     Dialog(parent), device(device), path(path)
 {
+    QDialogButtonBox *buttons = new QDialogButtonBox(this);
     QLayout *horizontal = new QHBoxLayout;
     QVBoxLayout *vertical = new QVBoxLayout;
-    QGroupBox *permissions = new QGroupBox(translate("group_permissions"), this);
     QGroupBox *meta = new QGroupBox(translate("group_meta"), this);
+    QGroupBox *permissions = new QGroupBox(translate("group_permissions"), this);
     QFormLayout *layoutfs = new QFormLayout;
     QFormLayout *layoutpermissions = new QFormLayout(permissions);
     QFormLayout *layoutmeta = new QFormLayout(meta);
-    QDialogButtonBox *buttons = new QDialogButtonBox(this);
     QLineEdit *egroup = new QLineEdit(this);
     QLineEdit *ename = new QLineEdit(this);
     QLineEdit *eowner = new QLineEdit(this);
@@ -60,6 +60,7 @@ File::File(const QString &device, const QString &path, QWidget *parent) :
     vertical->addLayout(horizontal);
     vertical->addWidget(buttons);
     setLayout(vertical);
+    setMinimumSize(320, 160);
     setWindowIcon(::icon("file"));
     setWindowTitle(translate("title_window").arg(path));
 }

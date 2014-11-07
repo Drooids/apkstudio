@@ -164,7 +164,6 @@ void Explorer::onInitComplete()
     QTreeWidgetItem *bookmarks = new QTreeWidgetItem(tree);
     QTreeWidgetItem *system = new QTreeWidgetItem(tree);
     QTreeWidgetItem *applications = new QTreeWidgetItem(system);
-    QTreeWidgetItem *information = new QTreeWidgetItem(system);
     QTreeWidgetItem *music = new QTreeWidgetItem(bookmarks);
     QTreeWidgetItem *partitions = new QTreeWidgetItem(system);
     QTreeWidgetItem *photos = new QTreeWidgetItem(bookmarks);
@@ -179,9 +178,6 @@ void Explorer::onInitComplete()
     bookmarks->addChild(videos);
     bookmarks->setIcon(0, ::icon("bookmark"));
     bookmarks->setText(0, translate("navigation_bookmarks"));
-    information->setIcon(0, ::icon("system_monitor"));
-    information->setText(0, translate("navigation_information"));
-    information->setData(0, ROLE_TYPE, NAVIGATION_INFORMATION);
     music->setIcon(0, ::icon("music_beam"));
     music->setText(0, translate("navigation_music"));
     music->setData(0, ROLE_TYPE, NAVIGATION_MUSIC);
@@ -194,7 +190,6 @@ void Explorer::onInitComplete()
     sizes << 160;
     sizes << (width() - (sizes.at(0) + 16));
     system->addChild(applications);
-    system->addChild(information);
     system->addChild(partitions);
     system->addChild(storage);
     system->setIcon(0, ::icon("board_game"));
@@ -225,12 +220,6 @@ void Explorer::onNodeClicked(const QModelIndex &index)
         Applications *application = new Applications(device, tabs);
         tabs->setCurrentIndex(tabs->addTab(application, item->icon(0), item->text(0)));
         QTimer::singleShot(0, application, SLOT(onRefresh()));
-        break;
-    }
-    case NAVIGATION_INFORMATION: {
-        Information *information = new Information(device, tabs);
-        tabs->setCurrentIndex(tabs->addTab(information, item->icon(0), item->text(0)));
-        QTimer::singleShot(0, information, SLOT(onRefresh()));
         break;
     }
     case NAVIGATION_MUSIC: {

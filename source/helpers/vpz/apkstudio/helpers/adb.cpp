@@ -132,25 +132,12 @@ bool ADB::create(const QString &device, const QString &path) const
     return execute(arguments).isEmpty();
 }
 
-QMap<QString, QString> ADB::details(const QString &device, const Details &type, const QString &identifier) const
+QMap<QString, QString> ADB::details(const QString &device, const int type, const QString &identifier) const
 {
     QString extra(identifier);
     QMap<QString, QString> details;
     switch(type)
     {
-    case DETAILS_DEVICE: {
-        QStringList arguments("-s");
-        arguments << device;
-        arguments << "shell";
-        arguments << "dumpsys";
-        arguments << "battery";
-        QStringList battery = execute(arguments);
-        arguments.removeLast();
-        arguments.removeLast();
-        arguments << "df";
-        QStringList disks = execute(arguments);
-        break;
-    }
     case DETAILS_APPLICATION: {
         QStringList arguments("-s");
         arguments << device;
@@ -583,7 +570,7 @@ QString ADB::quote(const QStringList &text) const
     return quoted;
 }
 
-void ADB::reboot(const QString &device, const Reboot &mode)
+void ADB::reboot(const QString &device, const int mode)
 {
     int root = Settings::rootShell();
     QStringList arguments("-s");

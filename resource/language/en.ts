@@ -4,6 +4,70 @@
 <context>
     <name>application</name>
     <message>
+        <source>button_close</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <source>group_fs</source>
+        <translation>File-System</translation>
+    </message>
+    <message>
+        <source>group_meta</source>
+        <translation>Meta</translation>
+    </message>
+    <message>
+        <source>group_status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <source>label_apk</source>
+        <translation>APK Path</translation>
+    </message>
+    <message>
+        <source>label_data</source>
+        <translation>Data Directory</translation>
+    </message>
+    <message>
+        <source>label_enabled</source>
+        <translation>Enabled</translation>
+    </message>
+    <message>
+        <source>label_installer</source>
+        <translation>Installer</translation>
+    </message>
+    <message>
+        <source>label_name</source>
+        <translation>File-name</translation>
+    </message>
+    <message>
+        <source>label_package</source>
+        <translation>Package</translation>
+    </message>
+    <message>
+        <source>label_running</source>
+        <translation>Running</translation>
+    </message>
+    <message>
+        <source>label_size</source>
+        <translation>Size</translation>
+    </message>
+    <message>
+        <source>label_system</source>
+        <translation>System</translation>
+    </message>
+    <message>
+        <source>label_update</source>
+        <translation>Updated On</translation>
+    </message>
+    <message>
+        <source>label_vcode</source>
+        <translation>Version Code</translation>
+    </message>
+    <message>
+        <source>label_vname</source>
+        <translation>Version Name</translation>
+    </message>
+    <message>
         <source>title_window</source>
         <translation>Details [%1]</translation>
     </message>
@@ -320,10 +384,6 @@
         <translation>Bookmarks</translation>
     </message>
     <message>
-        <source>navigation_information</source>
-        <translation>Information</translation>
-    </message>
-    <message>
         <source>navigation_music</source>
         <translation>Music</translation>
     </message>
@@ -350,6 +410,57 @@
     <message>
         <source>title_window</source>
         <translation>Explorer [%1]</translation>
+    </message>
+</context>
+<context>
+    <name>file</name>
+    <message>
+        <source>button_close</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <source>group_meta</source>
+        <translation>Meta</translation>
+    </message>
+    <message>
+        <source>group_permissions</source>
+        <translation>Permissions</translation>
+    </message>
+    <message>
+        <source>label_group</source>
+        <translation>Group</translation>
+    </message>
+    <message>
+        <source>label_name</source>
+        <translation>File-name</translation>
+    </message>
+    <message>
+        <source>label_owner</source>
+        <translation>Owner</translation>
+    </message>
+    <message>
+        <source>label_path</source>
+        <translation>Absolute Path</translation>
+    </message>
+    <message>
+        <source>label_permissions</source>
+        <translation>Permissions</translation>
+    </message>
+    <message>
+        <source>label_size</source>
+        <translation>Size</translation>
+    </message>
+    <message>
+        <source>label_symlink</source>
+        <translation>Symlinked To</translation>
+    </message>
+    <message>
+        <source>label_timestamp</source>
+        <translation>Last Modified</translation>
+    </message>
+    <message>
+        <source>title_window</source>
+        <translation>Details [%1]</translation>
     </message>
 </context>
 <context>
@@ -1345,6 +1456,13 @@
     <message>
         <source>title_select</source>
         <translation>Select Files</translation>
+    </message>
+</context>
+<context>
+    <name>task</name>
+    <message>
+        <source>output_idle</source>
+        <translation>Idle...</translation>
     </message>
 </context>
 <context>

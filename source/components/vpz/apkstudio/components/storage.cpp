@@ -147,7 +147,15 @@ void Storage::onDetails()
     QVector<File> files = selected();
     if (files.isEmpty())
         return;
-    emit showFile(files.first().path);
+    File file = files.first();
+    switch (file.type) {
+    case File::FOLDER:
+    case File::SYMLINK_FOLDER:
+        break;
+    default:
+        emit showFile(file.path);
+        break;
+    }
 }
 
 void Storage::onDoubleClicked(const QModelIndex &index)
@@ -371,7 +379,10 @@ void Storage::onRefresh()
         for (int i = 0; i < 6; ++i)
             row->setData(i, ROLE_STRUCT, QVariant::fromValue(file));
         row->setText(0, file.name);
-        row->setText(1, Format::size(file.size));
+        if ((file.type == File::FOLDER) || (file.type == File::SYMLINK_FOLDER))
+            row->setText(1, "");
+        else
+            row->setText(1, Format::size(file.size));
         row->setText(2, file.permission.display);
         row->setText(3, file.owner);
         row->setText(4, file.group);

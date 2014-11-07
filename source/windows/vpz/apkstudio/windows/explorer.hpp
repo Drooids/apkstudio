@@ -10,7 +10,6 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 #include "components/applications.hpp"
-#include "components/information.hpp"
 #include "components/music.hpp"
 #include "components/partitions.hpp"
 #include "components/photos.hpp"
@@ -37,7 +36,6 @@ private:
     enum {
         NAVIGATION_APPLICATIONS = 1,
         NAVIGATION_STORAGE,
-        NAVIGATION_INFORMATION,
         NAVIGATION_MUSIC,
         NAVIGATION_PARTITIONS,
         NAVIGATION_PHOTOS,

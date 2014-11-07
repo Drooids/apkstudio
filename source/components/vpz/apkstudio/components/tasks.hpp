@@ -5,6 +5,7 @@
 #include "helpers/settings.hpp"
 #include "helpers/text.hpp"
 #include "dockable.hpp"
+#include "task.hpp"
 
 namespace VPZ {
 namespace APKStudio {
@@ -21,6 +22,7 @@ private:
     }
 public:
     explicit Tasks(QWidget *parent = 0);
+    void add(const QString &, const QString &, const QStringList &);
 };
 
 } // namespace Components
