@@ -1,5 +1,4 @@
 #include "explorer.hpp"
-#include <QDebug>
 
 using namespace VPZ::APKStudio::Components;
 using namespace VPZ::APKStudio::Helpers;
@@ -110,30 +109,34 @@ void Explorer::createToolbar()
         QWidget *widget = this->tabs->currentWidget();
         if (!widget)
             return;
-        disconnect(this->actions);
-        disconnect(this->chmod);
-        disconnect(this->refresh);
+        foreach (QMetaObject::Connection connection, contextual)
+            disconnect(connection);
         if (widget->inherits(Applications::staticMetaObject.className())) {
-            this->actions = connect(applications, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)");
+            contextual.append(connect(applications, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)"));
+            contextual.append(connect(widget, "2showApplication(QString)", this, "1onShowApplication(QString)"));
             applications->setVisible(true);
         } else if (widget->inherits(Components::Music::staticMetaObject.className())) {
-            this->actions = connect(music, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)");
+            contextual.append(connect(music, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)"));
+            contextual.append(connect(widget, "2showFile(QString)", this, "1onShowFile(QString)"));
             music->setVisible(true);
         } else if (widget->inherits(Partitions::staticMetaObject.className())) {
-            this->actions = connect(partitions, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)");
+            contextual.append(connect(partitions, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)"));
             partitions->setVisible(true);
         } else if (widget->inherits(Photos::staticMetaObject.className())) {
-            this->actions = connect(photos, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)");
+            contextual.append(connect(photos, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)"));
+            contextual.append(connect(widget, "2showFile(QString)", this, "1onShowFile(QString)"));
             photos->setVisible(true);
         } else if (widget->inherits(Storage::staticMetaObject.className())) {
-            this->actions = connect(storage, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)");
-            this->chmod = connect(widget, "2showCHMOD(Resources::File)", this, "1onShowCHMOD(Resources::File)");
+            contextual.append(connect(storage, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)"));
+            contextual.append(connect(widget, "2showCHMOD(Resources::File)", this, "1onShowCHMOD(Resources::File)"));
+            contextual.append(connect(widget, "2showFile(QString)", this, "1onShowFile(QString)"));
             storage->setVisible(true);
         } else if (widget->inherits(Videos::staticMetaObject.className())) {
-            this->actions = connect(videos, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)");
+            contextual.append(connect(videos, SIGNAL(triggered(QAction*)), widget, "1onAction(QAction*)"));
+            contextual.append(connect(widget, "2showFile(QString)", this, "1onShowFile(QString)"));
             videos->setVisible(true);
         }
-        this->refresh = connect(refresh, SIGNAL(triggered()), widget, "1onRefresh()");
+        contextual.append(connect(refresh, SIGNAL(triggered()), widget, "1onRefresh()"));
         refresh->setEnabled(true);
     }));
     connections.append(connect(tabs, static_cast<void(QTabWidget::*)(int)>(&QTabWidget::tabCloseRequested), [ this ] (int index) {
@@ -265,18 +268,29 @@ void Explorer::onNodeClicked(const QModelIndex &index)
     }
 }
 
-void Explorer::onShowCHMOD(const File &file)
+void Explorer::onShowApplication(const QString &package)
+{
+    Application *application = new Application(device, package, this);
+    QTimer::singleShot(0, application, SLOT(onInitComplete()));
+    application->show();
+}
+
+void Explorer::onShowCHMOD(const Resources::File &file)
 {
     (new CHMOD(device, file, this))->exec();
 }
 
+void Explorer::onShowFile(const QString &path)
+{
+    File *file = new File(device, path, this);
+    QTimer::singleShot(0, file, SLOT(onInitComplete()));
+    file->show();
+}
+
 Explorer::~Explorer()
 {
-    foreach (QMetaObject::Connection connection, connections)
+    foreach (QMetaObject::Connection connection, contextual)
         disconnect(connection);
-    disconnect(actions);
-    disconnect(chmod);
-    disconnect(refresh);
 }
 
 } // namespace Windows

@@ -85,6 +85,10 @@ void Music::onCopy()
 
 void Music::onDetails()
 {
+    QVector<Resources::Music> music = selected();
+    if (music.isEmpty())
+        return;
+    emit showFile(music.first().path);
 }
 
 void Music::onMove()

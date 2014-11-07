@@ -61,6 +61,10 @@ void Applications::onAction(QAction *action)
 
 void Applications::onDetails()
 {
+    QVector<Application> applications = selected();
+    if (applications.isEmpty())
+        return;
+    emit showApplication(applications.first().package);
 }
 
 void Applications::onDisable()

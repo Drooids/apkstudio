@@ -83,6 +83,10 @@ void Videos::onCopy()
 
 void Videos::onDetails()
 {
+    QVector<Video> videos = selected();
+    if (videos.isEmpty())
+        return;
+    emit showFile(videos.first().path);
 }
 
 void Videos::onMove()

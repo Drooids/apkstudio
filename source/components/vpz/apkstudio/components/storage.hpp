@@ -30,7 +30,6 @@ private:
 private:
     void onCHMOD();
     void onCopy(const QVector<Resources::File> &, const QString &);
-    void onDetails();
     void onMove(const QStringList &, const QString &);
     void onPull();
     void onPush();
@@ -41,6 +40,7 @@ private:
 private slots:
     void onCreate();
     void onCopy();
+    void onDetails();
     void onDoubleClicked(const QModelIndex &);
     void onEdit();
     void onFilesDropped(const QStringList &, const QModelIndex &);
@@ -69,6 +69,7 @@ public slots:
     void onAction(QAction *);
 signals:
     void showCHMOD(Resources::File);
+    void showFile(QString);
 };
 
 } // namespace Components

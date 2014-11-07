@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_IN" sourcelanguage="en_IN">
 <context>
+    <name>application</name>
+    <message>
+        <source>title_window</source>
+        <translation>Details [%1]</translation>
+    </message>
+</context>
+<context>
     <name>applications</name>
     <message>
         <source>header_file</source>

@@ -21,8 +21,10 @@
 #include "helpers/text.hpp"
 #include "resources/embedded.hpp"
 #include "resources/variant.hpp"
+#include "application.hpp"
 #include "chmod.hpp"
 #include "dialog.hpp"
+#include "file.hpp"
 
 namespace VPZ {
 namespace APKStudio {
@@ -41,11 +43,8 @@ private:
         NAVIGATION_PHOTOS,
         NAVIGATION_VIDEOS
     };
-    QMetaObject::Connection actions;
-    QMetaObject::Connection chmod;
-    QList<QMetaObject::Connection> connections;
+    QList<QMetaObject::Connection> contextual;
     QString device;
-    QMetaObject::Connection refresh;
     QSplitter *splitter;
     QTabWidget *tabs;
     Components::TreeWidget *tree;
@@ -58,7 +57,9 @@ private:
     }
 private slots:
     void onNodeClicked(const QModelIndex &);
+    void onShowApplication(const QString &);
     void onShowCHMOD(const Resources::File &);
+    void onShowFile(const QString &);
 public:
     explicit Explorer(const QString &, QWidget * = 0);
     ~Explorer();

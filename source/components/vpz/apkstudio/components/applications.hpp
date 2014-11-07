@@ -20,7 +20,6 @@ class Applications : public TreeWidget
     Q_OBJECT
     QString device;
 private:
-    void onDetails();
     void onDisable();
     void onEnable();
     void onPull();
@@ -29,6 +28,7 @@ private:
         return Helpers::Text::translate("applications", key);
     }
 private slots:
+    void onDetails();
     void onFilesDropped(const QStringList &, const QModelIndex &);
     void onInstall();
     void onUninstall();
@@ -45,6 +45,8 @@ public:
 public slots:
     void onAction(QAction *);
     void onRefresh();
+signals:
+    void showApplication(QString);
 };
 
 } // namespace Components

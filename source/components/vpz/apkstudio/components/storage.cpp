@@ -144,6 +144,10 @@ void Storage::onCreate()
 
 void Storage::onDetails()
 {
+    QVector<File> files = selected();
+    if (files.isEmpty())
+        return;
+    emit showFile(files.first().path);
 }
 
 void Storage::onDoubleClicked(const QModelIndex &index)

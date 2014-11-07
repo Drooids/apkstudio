@@ -24,16 +24,17 @@ private:
     QList<QMetaObject::Connection> connections;
     QString device;
 private:
+    QVector<Resources::Photo> selected();
+    static QString translate(const char *key) {
+        return Helpers::Text::translate("photos", key);
+    }
+private slots:
     void onCopy();
     void onDetails();
     void onMove();
     void onPull();
     void onRemove();
     void onRename();
-    QVector<Resources::Photo> selected();
-    static QString translate(const char *key) {
-        return Helpers::Text::translate("photos", key);
-    }
 public:
     enum {
         ACTION_COPY = 1,
@@ -48,6 +49,8 @@ public:
 public slots:
     void onAction(QAction *);
     void onRefresh();
+signals:
+    void showFile(QString);
 };
 
 } // namespace Components

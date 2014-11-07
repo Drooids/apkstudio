@@ -132,8 +132,9 @@ bool ADB::create(const QString &device, const QString &path) const
     return execute(arguments).isEmpty();
 }
 
-QMap<QString, QString> ADB::details(const QString &device, const Details &type, const char *identifier) const
+QMap<QString, QString> ADB::details(const QString &device, const Details &type, const QString &identifier) const
 {
+    QString extra(identifier);
     QMap<QString, QString> details;
     switch(type)
     {
@@ -156,7 +157,7 @@ QMap<QString, QString> ADB::details(const QString &device, const Details &type, 
         arguments << "shell";
         arguments << "dumpsys";
         arguments << "package";
-        arguments << identifier;
+        arguments << extra;
         QStringList output = execute(arguments);
         foreach (const QString &line, output) {
             if (!line.contains('='))
@@ -170,22 +171,22 @@ QMap<QString, QString> ADB::details(const QString &device, const Details &type, 
                         details[previous] = "";
                         continue;
                     }
-                    details[previous] = group.section(' ', 0, -2).trimmed();
-                    previous = group.section(' ', -1, -1).trimmed();
-                    details[previous] = "";
+                    if (group.contains(' ')) {
+                        details[previous] = group.section(' ', 0, -2).trimmed();
+                        previous = group.section(' ', -1, -1).trimmed();
+                        details[previous] = "";
+                    } else
+                        details[previous] = group;
                 }
             } else {
                 QStringList parts = line.split('=');
                 details[parts[0].trimmed()] = parts[1].trimmed();
             }
         }
-        identifier = details["codePath"].toStdString().c_str();
+        extra = details["codePath"];
     }
-    case DETAILS_FILE:
-    case DETAILS_MUSIC:
-    case DETAILS_PHOTO:
-    case DETAILS_VIDEO: {
-        QVector<File> files = this->files(device, identifier);
+    case DETAILS_FILE: {
+        QVector<File> files = this->files(device, extra);
         if (files.count() != 1)
             break;
         File file = files.first();
@@ -194,7 +195,7 @@ QMap<QString, QString> ADB::details(const QString &device, const Details &type, 
         details["name"] = file.name;
         details["owner"] = file.owner;
         details["path"] = file.path.section(' ', 0, -2);
-        details["display"] = file.permission.display;
+        details["permissions"] = file.permission.display;
         details["size"] = Format::size(file.size);
         details["timestamp"] = QString(file.date).append(' ').append(file.time);
         details["type"] = QString::number(file.type);

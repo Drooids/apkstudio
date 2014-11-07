@@ -28,6 +28,13 @@ private:
     static QString translate(const char *key) {
         return Helpers::Text::translate("videos", key);
     }
+private slots:
+    void onCopy();
+    void onDetails();
+    void onMove();
+    void onPull();
+    void onRemove();
+    void onRename();
 public:
     enum {
         ACTION_COPY = 1,
@@ -41,13 +48,9 @@ public:
     ~Videos();
 public slots:
     void onAction(QAction *);
-    void onCopy();
-    void onDetails();
-    void onMove();
-    void onPull();
     void onRefresh();
-    void onRemove();
-    void onRename();
+signals:
+    void showFile(QString);
 };
 
 } // namespace Components

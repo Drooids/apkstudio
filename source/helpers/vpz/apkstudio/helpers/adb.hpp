@@ -22,10 +22,7 @@ public:
     enum Details {
         DETAILS_APPLICATION = 1,
         DETAILS_DEVICE,
-        DETAILS_FILE,
-        DETAILS_MUSIC,
-        DETAILS_PHOTO,
-        DETAILS_VIDEO
+        DETAILS_FILE
     };
     enum Reboot {
         REBOOT_BOOTLOADER = 1,
@@ -43,7 +40,7 @@ public:
     bool chown(const QString &, const QString &, const QString &, const QString &, bool = false) const;
     bool copy(const QString &, const QString &, const QString &, bool = false) const;
     bool create(const QString &, const QString &) const;
-    QMap<QString, QString> details(const QString &, const Details &, const char *) const;
+    QMap<QString, QString> details(const QString &, const Details &, const QString &) const;
     QVector<Resources::Device> devices() const;
     bool enable(const QString &, const QString &, bool) const;
     QVector<Resources::File> files(const QString &, const QString &) const;

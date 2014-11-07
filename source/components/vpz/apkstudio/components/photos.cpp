@@ -86,6 +86,10 @@ void Photos::onCopy()
 
 void Photos::onDetails()
 {
+    QVector<Photo> photos = selected();
+    if (photos.isEmpty())
+        return;
+    emit showFile(photos.first().path);
 }
 
 void Photos::onMove()

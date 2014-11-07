@@ -16,7 +16,9 @@ HEADERS += \
     vpz/apkstudio/windows/logcat.hpp \
     vpz/apkstudio/windows/information.hpp \
     vpz/apkstudio/windows/explorer.hpp \
-    vpz/apkstudio/windows/dialog.hpp
+    vpz/apkstudio/windows/dialog.hpp \
+    vpz/apkstudio/windows/application.hpp \
+    vpz/apkstudio/windows/file.hpp
 
 SOURCES += \
     vpz/apkstudio/windows/ide.cpp \
@@ -25,7 +27,9 @@ SOURCES += \
     vpz/apkstudio/windows/logcat.cpp \
     vpz/apkstudio/windows/information.cpp \
     vpz/apkstudio/windows/explorer.cpp \
-    vpz/apkstudio/windows/dialog.cpp
+    vpz/apkstudio/windows/dialog.cpp \
+    vpz/apkstudio/windows/application.cpp \
+    vpz/apkstudio/windows/file.cpp
 
 # Include referenced co-projects & libraries
 win32 {

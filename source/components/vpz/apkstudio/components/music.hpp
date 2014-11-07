@@ -24,15 +24,16 @@ private:
     QList<QMetaObject::Connection> connections;
     QString device;
 private:
+    static QString translate(const char *key) {
+        return Helpers::Text::translate("music", key);
+    }
+private slots:
     void onCopy();
     void onDetails();
     void onMove();
     void onPull();
     void onRemove();
     void onRename();
-    static QString translate(const char *key) {
-        return Helpers::Text::translate("music", key);
-    }
 public:
     enum {
         ACTION_COPY = 1,
@@ -48,6 +49,8 @@ public:
 public slots:
     void onAction(QAction *);
     void onRefresh();
+signals:
+    void showFile(QString);
 };
 
 } // namespace Components
