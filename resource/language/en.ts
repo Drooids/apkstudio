@@ -1471,6 +1471,14 @@
         <source>title_dock</source>
         <translation>Tasks</translation>
     </message>
+    <message>
+        <source>item_clear</source>
+        <translation>Clear</translation>
+    </message>
+    <message>
+        <source>item_stop</source>
+        <translation>Stop</translation>
+    </message>
 </context>
 <context>
     <name>toolbar</name>

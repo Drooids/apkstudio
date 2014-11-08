@@ -123,18 +123,21 @@ void Applications::onFilesDropped(const QStringList &files, const QModelIndex &a
     int result =  QMessageBox::question(this, translate("title_install"), translate("message_install").arg(QString::number(apks.count())), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    int failed = 0;
-    int successful = 0;
-    foreach (const QString &apk, apks) {
-        if (ADB::instance()->install(device, apk))
-            successful++;
-        else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_install_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
-    if (successful >= 1)
-        onRefresh();
+    Tasks::instance()->add(QString("Install %1 applications").arg(QString::number(apks.count())), [ apks, this ] () -> QVariant {
+        int failed = 0;
+        int successful = 0;
+        foreach (const QString &apk, apks) {
+            if (ADB::instance()->install(device, apk))
+                successful++;
+            else
+                failed++;
+        }
+        return QVariant().fromValue(QPair<int, int>(failed, successful));
+    }, [ this ] (QVariant result) {
+        QPair<int, int> pair = result.value<QPair<int, int>>();
+        if (pair.first >= 1)
+            QMessageBox::critical(this, translate("title_failure"), translate("message_install_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    });
 }
 
 void Applications::onInstall()

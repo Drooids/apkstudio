@@ -22,6 +22,8 @@ struct Bracket {
     int position;
 };
 
+typedef void(* Callback)(QVariant);
+
 struct Device {
     QString serial;
     enum Status {
@@ -104,6 +106,8 @@ struct Partition {
     QString device;
     QString mount;
 };
+
+typedef QVariant(* Runnable)();
 
 struct Style {
     bool bold;

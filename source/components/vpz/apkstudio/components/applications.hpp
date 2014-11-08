@@ -9,6 +9,7 @@
 #include "helpers/text.hpp"
 #include "resources/embedded.hpp"
 #include "resources/variant.hpp"
+#include "tasks.hpp"
 #include "treewidget.hpp"
 
 namespace VPZ {
