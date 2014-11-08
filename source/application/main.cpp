@@ -15,6 +15,9 @@ int main(int count, char *arguments[])
 {
     QCoreApplication::setApplicationName(APPLICATION_NAME);
     QCoreApplication::setOrganizationName(APPLICATION_AUTHOR);
+    // -- //
+    qRegisterMetaType<QVariant>("QVariant");
+    // -- //
     int code = 0;
     do {
         QString theme(Helpers::Settings::theme());

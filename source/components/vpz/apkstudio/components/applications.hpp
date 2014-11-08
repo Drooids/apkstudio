@@ -5,6 +5,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QShortcut>
+#include "async/install.hpp"
+#include "async/pull.hpp"
+#include "async/uninstall.hpp"
 #include "helpers/adb.hpp"
 #include "helpers/text.hpp"
 #include "resources/embedded.hpp"
@@ -32,7 +35,10 @@ private slots:
     void onDetails();
     void onFilesDropped(const QStringList &, const QModelIndex &);
     void onInstall();
+    void onInstallFinished(const QVariant &);
+    void onPullFinished(const QVariant &);
     void onUninstall();
+    void onUninstallFinished(const QVariant &, const QStringList &);
 public:
     enum {
         ACTION_DETAILS = 1,

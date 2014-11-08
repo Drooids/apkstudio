@@ -34,7 +34,8 @@ HEADERS += \
     vpz/apkstudio/components/partitions.hpp \
     vpz/apkstudio/components/clearable.hpp \
     vpz/apkstudio/components/treewidget.hpp \
-    vpz/apkstudio/components/task.hpp
+    vpz/apkstudio/components/task.hpp \
+    vpz/apkstudio/components/listwidget.hpp
 
 SOURCES += \
     vpz/apkstudio/components/coder.cpp \
@@ -62,26 +63,32 @@ SOURCES += \
     vpz/apkstudio/components/partitions.cpp \
     vpz/apkstudio/components/clearable.cpp \
     vpz/apkstudio/components/treewidget.cpp \
-    vpz/apkstudio/components/task.cpp
+    vpz/apkstudio/components/task.cpp \
+    vpz/apkstudio/components/listwidget.cpp
 
 # Include referenced co-projects & libraries
 win32 {
     CONFIG(release, debug|release): {
+        LIBS += -L$$OUT_PWD/../async/release/ -lasync
         LIBS += -L$$OUT_PWD/../helpers/release/ -lhelpers
         LIBS += -L$$OUT_PWD/../resources/release/ -lresources
     } else {
+        LIBS += -L$$OUT_PWD/../async/debug/ -lasync
         LIBS += -L$$OUT_PWD/../helpers/debug/ -lhelpers
         LIBS += -L$$OUT_PWD/../resources/debug/ -lresources
     }
 }
 
 unix {
+    LIBS += -L$$OUT_PWD/../async/ -lasync
     LIBS += -L$$OUT_PWD/../helpers/ -lhelpers
     LIBS += -L$$OUT_PWD/../resources/ -lresources
 }
 
+DEPENDPATH += $$PWD/../async
 DEPENDPATH += $$PWD/../helpers
 DEPENDPATH += $$PWD/../resources
 
+INCLUDEPATH += $$PWD/../async/vpz/apkstudio
 INCLUDEPATH += $$PWD/../helpers/vpz/apkstudio
 INCLUDEPATH += $$PWD/../resources/vpz/apkstudio

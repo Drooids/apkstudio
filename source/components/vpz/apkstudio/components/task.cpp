@@ -1,64 +1,39 @@
 #include "task.hpp"
 
-using namespace VPZ::APKStudio::Helpers;
-using namespace VPZ::APKStudio::Resources;
-
 namespace VPZ {
 namespace APKStudio {
 namespace Components {
 
-Task::Task(const QString &title, Runnable runnable, Callback callback, QWidget *parent) :
-    QWidget(parent), callback(callback), runnable(runnable)
+Task::Task(const QString &title, Async::Task *task, QListWidget *parent)
+    : QListWidgetItem("", parent), task(task)
 {
-    QLayout *layout = new QVBoxLayout(this);
-    output = new QLabel(translate("output_idle"), this);
-    progress = new QProgressBar(this);
-    layout->addWidget(new QLabel(title, this));
+    widget = new QWidget(parent);
+    QLayout *layout = new QVBoxLayout(widget);
+    progress = new QProgressBar(widget);
+    connections.append(connect(task, SIGNAL(started()), this, SLOT(onStart())));
+    connections.append(connect(task, SIGNAL(stopped()), this, SLOT(onStop())));
+    layout->addWidget(new QLabel(title, widget));
     layout->addWidget(progress);
-    layout->addWidget(output);
     layout->setContentsMargins(8, 8, 8, 8);
     layout->setSpacing(4);
     progress->setEnabled(false);
     progress->setMaximumHeight(12);
+    progress->setMaximum(0);
+    progress->setMinimum(0);
     progress->setTextVisible(false);
-    setLayout(layout);
+    widget->setLayout(layout);
+    setSizeHint(widget->sizeHint());
 }
 
-bool Task::isFinished()
+void Task::onStart()
 {
-    return (async == NULL) ? false : async->isFinished();
+    progress->setEnabled(true);
 }
 
-bool Task::isRunning()
+void Task::onStop()
 {
-    return (async == NULL) ? false : async->isRunning();
-}
-
-void Task::onFinished(const QVariant &variant)
-{
-    callback(variant);
-}
-
-void Task::start()
-{
-    if (async != NULL)
-        delete async;
-    async = new Async(this);
-    connections.append(connect(async, SIGNAL(finished(QVariant)), this, SLOT(onFinished(QVariant))));
-    async->start(runnable);
-}
-
-void Task::stop()
-{
-    if (async == NULL)
-        return;
-    async->terminate();
-}
-
-Task::~Task()
-{
-    foreach (QMetaObject::Connection connection, connections)
-        disconnect(connection);
+    progress->setEnabled(false);
+    emit finished();
 }
 
 } // namespace Components

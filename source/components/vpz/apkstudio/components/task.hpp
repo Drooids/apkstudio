@@ -1,47 +1,33 @@
 #ifndef VPZ_APKSTUDIO_COMPONENTS_TASK_HPP
 #define VPZ_APKSTUDIO_COMPONENTS_TASK_HPP
 
-#include <functional>
 #include <QBoxLayout>
 #include <QLabel>
+#include <QListWidgetItem>
 #include <QProgressBar>
 #include <QPushButton>
-#include <QWidget>
-#include "helpers/async.hpp"
-#include "helpers/text.hpp"
-#include "resources/embedded.hpp"
-#include "resources/variant.hpp"
+#include "async/task.hpp"
 
 namespace VPZ {
 namespace APKStudio {
 namespace Components {
 
-class Task : public QWidget
+class Task : public QObject, public QListWidgetItem
 {
     Q_OBJECT
 private:
-    Helpers::Async *async;
-    Resources::Callback callback;
     QList<QMetaObject::Connection> connections;
-    QLabel *output;
-    QProgressBar *progress;
-    Resources::Runnable runnable;
-private:
-    void createButtons();
-    void createLabel(const QString &);
-    void createProgress();
-    static QString translate(const char *key) {
-        return Helpers::Text::translate("task", key);
-    }
-private slots:
-    void onFinished(const QVariant &);
 public:
-    explicit Task(const QString &, Resources::Runnable, Resources::Callback, QWidget * = 0);
-    bool isFinished();
-    bool isRunning();
-    void start();
-    void stop();
-    ~Task();
+    QProgressBar *progress;
+    Async::Task *task;
+    QWidget *widget;
+public:
+    explicit Task(const QString &, Async::Task *, QListWidget * = 0);
+public slots:
+    void onStart();
+    void onStop();
+signals:
+    void finished();
 };
 
 } // namespace Components

@@ -26,8 +26,7 @@ HEADERS += \
     vpz/apkstudio/helpers/cli.hpp \
     vpz/apkstudio/helpers/apktool.hpp \
     vpz/apkstudio/helpers/realtime.hpp \
-    vpz/apkstudio/helpers/projects.hpp \
-    vpz/apkstudio/helpers/async.hpp
+    vpz/apkstudio/helpers/projects.hpp
 
 SOURCES += \
     vpz/apkstudio/helpers/text.cpp \
@@ -42,5 +41,4 @@ SOURCES += \
     vpz/apkstudio/helpers/cli.cpp \
     vpz/apkstudio/helpers/apktool.cpp \
     vpz/apkstudio/helpers/realtime.cpp \
-    vpz/apkstudio/helpers/projects.cpp \
-    vpz/apkstudio/helpers/async.cpp
+    vpz/apkstudio/helpers/projects.cpp

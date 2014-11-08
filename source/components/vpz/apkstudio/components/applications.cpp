@@ -1,5 +1,6 @@
 #include "applications.hpp"
 
+using namespace VPZ::APKStudio::Async;
 using namespace VPZ::APKStudio::Helpers;
 using namespace VPZ::APKStudio::Resources;
 
@@ -109,9 +110,9 @@ void Applications::onEnable()
         QMessageBox::critical(this, translate("title_failure"), translate("message_enable_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
-void Applications::onFilesDropped(const QStringList &files, const QModelIndex &at)
+void Applications::onFilesDropped(const QStringList &files, const QModelIndex &a)
 {
-    Q_UNUSED(at)
+    Q_UNUSED(a)
     QStringList apks;
     foreach (const QString &file, files) {
         QFileInfo apk(file);
@@ -123,21 +124,9 @@ void Applications::onFilesDropped(const QStringList &files, const QModelIndex &a
     int result =  QMessageBox::question(this, translate("title_install"), translate("message_install").arg(QString::number(apks.count())), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    Tasks::instance()->add(QString("Install %1 applications").arg(QString::number(apks.count())), [ apks, this ] () -> QVariant {
-        int failed = 0;
-        int successful = 0;
-        foreach (const QString &apk, apks) {
-            if (ADB::instance()->install(device, apk))
-                successful++;
-            else
-                failed++;
-        }
-        return QVariant().fromValue(QPair<int, int>(failed, successful));
-    }, [ this ] (QVariant result) {
-        QPair<int, int> pair = result.value<QPair<int, int>>();
-        if (pair.first >= 1)
-            QMessageBox::critical(this, translate("title_failure"), translate("message_install_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
-    });
+    Install *install = new Install(device, apks);
+    connections.append(connect(install, SIGNAL(finished(QVariant)), this, SLOT(onInstallFinished(QVariant)), Qt::QueuedConnection));
+    Tasks::instance()->add(QString("Install %1 applications").arg(QString::number(apks.count())), install);
 }
 
 void Applications::onInstall()
@@ -154,6 +143,13 @@ void Applications::onInstall()
     onFilesDropped(files, QModelIndex());
 }
 
+void Applications::onInstallFinished(const QVariant &result)
+{
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.first >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_install_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+}
+
 void Applications::onPull()
 {
     QVector<Application> applications = selected();
@@ -168,41 +164,19 @@ void Applications::onPull()
     if (folders.count() != 1)
         return;
     QDir directory(folders.first());
-    int failed = 0;
-    int successful = 0;
-    foreach (const Application &application, applications) {
-        if (ADB::instance()->pull(device, application.path, directory.absolutePath())) {
-            if (QFile::exists(directory.absoluteFilePath(application.name)))
-                successful++;
-        } else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    QStringList paths;
+    foreach (const Application &application, applications)
+        paths << application.path;
+    Pull *pull = new Pull(device, paths, directory);
+    connections.append(connect(pull, SIGNAL(finished(QVariant)), this, SLOT(onPullFinished(QVariant)), Qt::QueuedConnection));
+    Tasks::instance()->add(QString("Pull %1 APKs").arg(QString::number(paths.count())), pull);
 }
 
-void Applications::onUninstall()
+void Applications::onPullFinished(const QVariant &result)
 {
-    QVector<Application> applications = selected();
-    if (applications.isEmpty())
-        return;
-    int result =  QMessageBox::question(this, translate("title_uninstall"), translate("message_uninstall").arg(QString::number(applications.count())), QMessageBox::No | QMessageBox::Yes);
-    if (result != QMessageBox::Yes)
-        return;
-    int failed = 0;
-    int successful = 0;
-    foreach (const Application &application, applications) {
-        if (ADB::instance()->uninstall(device, application.package)) {
-            successful++;
-            QList<QTreeWidgetItem *> rows = findItems(application.package, Qt::MatchExactly, 1);
-            if (rows.count() != 1)
-                continue;
-            delete rows.first();
-        } else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_uninstall_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.first >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
 }
 
 void Applications::onRefresh()
@@ -231,6 +205,37 @@ QVector<Application> Applications::selected()
     foreach (QTreeWidgetItem *item, selectedItems())
         applications.append(item->data(0, ROLE_STRUCT).value<Application>());
     return applications;
+}
+
+void Applications::onUninstall()
+{
+    QVector<Application> applications = selected();
+    if (applications.isEmpty())
+        return;
+    int result =  QMessageBox::question(this, translate("title_uninstall"), translate("message_uninstall").arg(QString::number(applications.count())), QMessageBox::No | QMessageBox::Yes);
+    if (result != QMessageBox::Yes)
+        return;
+    QStringList packages;
+    foreach (const Application &application, applications)
+        packages << application.package;
+    Uninstall *uninstall = new Uninstall(device, packages);
+    connections.append(connect(uninstall, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onUninstallFinished(QVariant, QStringList)), Qt::QueuedConnection));
+    Tasks::instance()->add(QString("Uninstall %1 applications").arg(QString::number(packages.count())), uninstall);
+}
+
+void Applications::onUninstallFinished(const QVariant &result, const QStringList &uninstalled)
+{
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.first >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_uninstall_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (uninstalled.isEmpty())
+        return;
+    foreach (const QString &package, uninstalled) {
+        QList<QTreeWidgetItem *> rows = findItems(package, Qt::MatchExactly, 1);
+        if (rows.count() != 1)
+            continue;
+        delete rows.first();
+    }
 }
 
 } // namespace Components
