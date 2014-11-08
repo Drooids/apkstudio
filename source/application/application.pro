@@ -16,7 +16,7 @@ win32 {
 }
 
 unix {
-    LIBS += -L$$OUT_PWD/../components/ -lasync
+    LIBS += -L$$OUT_PWD/../async/ -lasync
     LIBS += -L$$OUT_PWD/../components/ -lcomponents
     LIBS += -L$$OUT_PWD/../helpers/ -lhelpers
     LIBS += -L$$OUT_PWD/../resources/ -lresources
