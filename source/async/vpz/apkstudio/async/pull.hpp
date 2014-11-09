@@ -15,9 +15,9 @@ class Pull : public Task
 private:
     QDir destination;
     QString device;
-    QStringList paths;
+    QMap<QString, bool> files;
 public:
-    Pull(const QString &, const QStringList &, const QDir &, QObject * = 0);
+    Pull(const QString &, const QMap<QString, bool> &, const QDir &, QObject * = 0);
     void start();
 signals:
     void finished(QVariant);

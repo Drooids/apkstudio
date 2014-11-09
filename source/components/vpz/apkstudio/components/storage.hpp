@@ -8,11 +8,17 @@
 #include <QShortcut>
 #include <QTreeWidget>
 #include <QVBoxLayout>
+#include "async/copy.hpp"
+#include "async/move.hpp"
+#include "async/pull.hpp"
+#include "async/push.hpp"
+#include "async/remove.hpp"
 #include "helpers/adb.hpp"
 #include "helpers/format.hpp"
 #include "helpers/text.hpp"
 #include "resources/variant.hpp"
 #include "clearable.hpp"
+#include "tasks.hpp"
 #include "treewidget.hpp"
 
 namespace VPZ {

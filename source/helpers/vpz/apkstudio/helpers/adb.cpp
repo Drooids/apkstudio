@@ -708,23 +708,6 @@ bool ADB::remove(const QString &device, const QString &path, bool recurse) const
     return execute(arguments).isEmpty();
 }
 
-bool ADB::rename(const QString &device, const QString &source, const QString &destination) const
-{
-    QStringList arguments("-s");
-    arguments << device;
-    arguments << "shell";
-    if (Settings::rootShell()) {
-        arguments << "su";
-        arguments << "-c";
-        arguments << QString("mv %1 %2").arg(quote(source), quote(destination));
-    } else {
-        arguments << "mv";
-        arguments << source;
-        arguments << destination;
-    }
-    return execute(arguments).isEmpty();
-}
-
 void ADB::screenshot(const QString &device, const QString &saveas)
 {
     QString binary(Settings::javaHome());
@@ -784,7 +767,7 @@ bool ADB::uninstall(const QString &device, const QString &package) const
     QStringList lines = execute(arguments);
     if (lines.size() != 1)
         return false;
-    return (lines.first().trimmed() == "Success");
+    return (QString::compare(lines.first().trimmed(), "Success") == 0);
 }
 
 bool ADB::unmount(const QString &device, const Partition &partition) const

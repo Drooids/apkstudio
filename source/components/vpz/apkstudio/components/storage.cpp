@@ -1,5 +1,6 @@
 #include "storage.hpp"
 
+using namespace VPZ::APKStudio::Async;
 using namespace VPZ::APKStudio::Helpers;
 using namespace VPZ::APKStudio::Resources;
 
@@ -420,24 +421,27 @@ void Storage::onRemove()
     int result =  QMessageBox::question(this, translate("title_remove"), translate("message_remove").arg(QString::number(files.count())), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    int failed = 0;
-    int successful = 0;
-    foreach (const File &file, files) {
-        if (ADB::instance()->remove(device, file.path, ((file.type == File::FOLDER) ||(file.type == File::SYMLINK_FOLDER)))) {
-            successful++;
-            QList<QTreeWidgetItem *> rows = tree->findItems(file.name, Qt::MatchExactly, 0);
-            if (rows.count() != 1)
-                continue;
-            delete rows.first();
-        } else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    QMap<QString, bool> removeable;
+    foreach (const File &file, files)
+        removeable[file.path] = ((file.type == File::FOLDER) ||(file.type == File::SYMLINK_FOLDER));
+    Remove *remove = new Remove(device, renameable);
+    connections.append(connect(remove, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onRemoveFinished(QVariant, QStringList)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_remove").arg(QString::number(removeable.count())), remove);
 }
 
 void Storage::onRemoveFinished(const QVariant &result, const QStringList &removed)
 {
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (removed.isEmpty())
+        return;
+    foreach (const QString &path, removed) {
+        QList<QTreeWidgetItem *> rows = findItems(path.section('/', -1, -1), Qt::MatchExactly, 1);
+        if (rows.count() != 1)
+            continue;
+        delete rows.first();
+    }
 }
 
 void Storage::onRename()
@@ -452,6 +456,7 @@ void Storage::onRename()
     bool multiple = (files.count() > 1);
     int failed = 0;
     int successful = 0;
+    QMap<QString, QString> renameable;
     for (int i = 0; i < files.count(); ++i) {
         QString newname(name);
         if (multiple)
@@ -460,20 +465,10 @@ void Storage::onRename()
         QString newpath(file.path.section('/', 0, -2));
         newpath.append('/');
         newpath.append(newname);
-        if (ADB::instance()->rename(device, file.path, newpath)) {
-            successful++;
-            QList<QTreeWidgetItem *> rows = tree->findItems(file.name, Qt::MatchExactly, 0);
-            if (rows.count() != 1)
-                continue;
-            file.name = newname;
-            file.path = newpath;
-            QTreeWidgetItem *row = rows.first();
-            for (int i = 0; i < 6; ++i)
-                row->setData(i, ROLE_STRUCT, QVariant::fromValue(file));
-            row->setText(0, newname);
-            row->setToolTip(0, newpath);
-        } else
-            failed++;
+        renameable[file.path] = newpath;
+        Move *rename = new Move(device, renameable);
+        connections.append(connect(rename, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onRenameFinished(QVariant, QStringList)), Qt::QueuedConnection));
+        Tasks::instance()->add(translate("task_rename").arg(QString::number(renameable.count())), rename);
     }
     if (failed >= 1)
         QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
@@ -482,6 +477,11 @@ void Storage::onRename()
 void Storage::onRenameFinished(const QVariant &result, const QStringList &a)
 {
     Q_UNUSED(a)
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (pair.first >= 1)
+        onRefresh();
 }
 
 void Storage::onReturn()

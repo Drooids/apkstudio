@@ -6,8 +6,8 @@ namespace VPZ {
 namespace APKStudio {
 namespace Async {
 
-Pull::Pull(const QString &device, const QStringList &paths, const QDir &destination, QObject *parent)
-    : Task(parent), paths(paths), destination(destination), device(device)
+Pull::Pull(const QString &device, const QMap<QString, bool> &files, const QDir &destination, QObject *parent)
+    : Task(parent), files(files), destination(destination), device(device)
 {
 }
 
@@ -15,10 +15,14 @@ void Pull::start()
 {
     int failed = 0;
     int successful = 0;
-    foreach (const QString &path, paths) {
+    foreach(const QString &path, files.keys()) {
         if (ADB::instance()->pull(device, path, destination.absolutePath())) {
-            if (QFile::exists(destination.absoluteFilePath(path.section('/', -1, -1))))
+            if (files[path])
                 successful++;
+            else if (destination.exists(path.section('/', -1, -1)))
+                successful++;
+            else
+                failed++;
         } else
             failed++;
     }

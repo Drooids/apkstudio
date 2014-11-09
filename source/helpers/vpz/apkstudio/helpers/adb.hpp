@@ -59,7 +59,6 @@ public:
     void reboot(const QString &, const int);
     bool remount(const QString &, const Resources::Partition &);
     bool remove(const QString &, const QString &, bool = false) const;
-    bool rename(const QString &, const QString &, const QString &) const;
     void screenshot(const QString &, const QString &);
     void shell(const QString &);
     void start();
