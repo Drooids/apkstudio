@@ -1,5 +1,5 @@
-#ifndef VPZ_APKSTUDIO_ASYNC_UNINSTALL_HPP
-#define VPZ_APKSTUDIO_ASYNC_UNINSTALL_HPP
+#ifndef VPZ_APKSTUDIO_ASYNC_ENABLE_HPP
+#define VPZ_APKSTUDIO_ASYNC_ENABLE_HPP
 
 #include "helpers/adb.hpp"
 #include "resources/variant.hpp"
@@ -9,14 +9,15 @@ namespace VPZ {
 namespace APKStudio {
 namespace Async {
 
-class Uninstall : public Task
+class Enable : public Task
 {
     Q_OBJECT
 private:
     QVector<Resources::Application> applications;
     QString device;
+    bool state;
 public:
-    Uninstall(const QString &, const QVector<Resources::Application> &, QObject * = 0);
+    explicit Enable(const QString &, const QVector<Resources::Application> &, const bool, QObject * = 0);
     void start();
 signals:
     void finished(QVariant, QStringList);
@@ -26,4 +27,4 @@ signals:
 } // namespace APKStudio
 } // namespace VPZ
 
-#endif // VPZ_APKSTUDIO_ASYNC_UNINSTALL_HPP
+#endif // VPZ_APKSTUDIO_ASYNC_ENABLE_HPP

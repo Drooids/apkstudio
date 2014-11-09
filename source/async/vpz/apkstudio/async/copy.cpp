@@ -1,4 +1,4 @@
-#include "install.hpp"
+#include "copy.hpp"
 
 using namespace VPZ::APKStudio::Helpers;
 
@@ -6,17 +6,17 @@ namespace VPZ {
 namespace APKStudio {
 namespace Async {
 
-Install::Install(const QString &device, const QStringList &apks, QObject *parent)
-    : Task(parent), apks(apks), device(device)
+Copy::Copy(const QString &device, const QMap<QString, bool> &files, const QString &destination, QObject *parent) :
+    Task(parent), destination(destination), device(device), files(files)
 {
 }
 
-void Install::start()
+void Copy::start()
 {
     int failed = 0;
     int successful = 0;
-    foreach (const QString &apk, apks) {
-        if (ADB::instance()->install(device, apk))
+    foreach(const QString &path, files.keys()) {
+        if (ADB::instance()->copy(device, path, destination, files[path]))
             successful++;
         else
             failed++;

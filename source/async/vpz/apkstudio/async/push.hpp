@@ -1,7 +1,6 @@
-#ifndef VPZ_APKSTUDIO_ASYNC_PULL_HPP
-#define VPZ_APKSTUDIO_ASYNC_PULL_HPP
+#ifndef VPZ_APKSTUDIO_ASYNC_PUSH_HPP
+#define VPZ_APKSTUDIO_ASYNC_PUSH_HPP
 
-#include <QDir>
 #include "helpers/adb.hpp"
 #include "task.hpp"
 
@@ -9,15 +8,15 @@ namespace VPZ {
 namespace APKStudio {
 namespace Async {
 
-class Pull : public Task
+class Push : public Task
 {
     Q_OBJECT
 private:
-    QDir destination;
+    QStringList files;
+    QString destination;
     QString device;
-    QStringList paths;
 public:
-    Pull(const QString &, const QStringList &, const QDir &, QObject * = 0);
+    explicit Push(const QString &, const QStringList &, const QString &, QObject * = 0);
     void start();
 signals:
     void finished(QVariant);
@@ -27,4 +26,4 @@ signals:
 } // namespace APKStudio
 } // namespace VPZ
 
-#endif // VPZ_APKSTUDIO_ASYNC_PULL_HPP
+#endif // VPZ_APKSTUDIO_ASYNC_PUSH_HPP

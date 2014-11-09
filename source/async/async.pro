@@ -13,13 +13,21 @@ HEADERS += \
     vpz/apkstudio/async/task.hpp \
     vpz/apkstudio/async/install.hpp \
     vpz/apkstudio/async/uninstall.hpp \
-    vpz/apkstudio/async/pull.hpp
+    vpz/apkstudio/async/pull.hpp \
+    vpz/apkstudio/async/enable.hpp \
+    vpz/apkstudio/async/copy.hpp \
+    vpz/apkstudio/async/move.hpp \
+    vpz/apkstudio/async/push.hpp
 
 SOURCES += \
     vpz/apkstudio/async/task.cpp \
     vpz/apkstudio/async/install.cpp \
     vpz/apkstudio/async/uninstall.cpp \
-    vpz/apkstudio/async/pull.cpp
+    vpz/apkstudio/async/pull.cpp \
+    vpz/apkstudio/async/enable.cpp \
+    vpz/apkstudio/async/copy.cpp \
+    vpz/apkstudio/async/move.cpp \
+    vpz/apkstudio/async/push.cpp
 
 # Include referenced co-projects & libraries
 win32 {

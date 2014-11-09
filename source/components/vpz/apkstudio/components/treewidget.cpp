@@ -1,4 +1,5 @@
 #include "treewidget.hpp"
+#include <QDebug>
 
 namespace VPZ {
 namespace APKStudio {

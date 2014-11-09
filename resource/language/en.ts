@@ -119,6 +119,26 @@
         <translation>Successfully uninstalled: %1, failed: %2</translation>
     </message>
     <message>
+        <source>task_disable</source>
+        <translation>Disable %1 application(s)</translation>
+    </message>
+    <message>
+        <source>task_enable</source>
+        <translation>Enable %1 application(s)</translation>
+    </message>
+    <message>
+        <source>task_install</source>
+        <translation>Install %1 application(s)</translation>
+    </message>
+    <message>
+        <source>task_pull</source>
+        <translation>Pull %1 APK(s)</translation>
+    </message>
+    <message>
+        <source>task_uninstall</source>
+        <translation>Uninstall %1 application(s)</translation>
+    </message>
+    <message>
         <source>title_browse</source>
         <translation>Select Folder</translation>
     </message>

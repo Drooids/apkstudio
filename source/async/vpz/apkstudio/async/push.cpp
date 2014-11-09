@@ -1,4 +1,4 @@
-#include "install.hpp"
+#include "push.hpp"
 
 using namespace VPZ::APKStudio::Helpers;
 
@@ -6,17 +6,17 @@ namespace VPZ {
 namespace APKStudio {
 namespace Async {
 
-Install::Install(const QString &device, const QStringList &apks, QObject *parent)
-    : Task(parent), apks(apks), device(device)
+Push::Push(const QString &device, const QStringList &files, const QString &destination, QObject *parent) :
+    Task(parent), destination(destination), device(device), files(files)
 {
 }
 
-void Install::start()
+void Push::start()
 {
     int failed = 0;
     int successful = 0;
-    foreach (const QString &apk, apks) {
-        if (ADB::instance()->install(device, apk))
+    foreach(const QString &file, files) {
+        if (ADB::instance()->push(device, file, destination))
             successful++;
         else
             failed++;

@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QShortcut>
+#include "async/enable.hpp"
 #include "async/install.hpp"
 #include "async/pull.hpp"
 #include "async/uninstall.hpp"
@@ -22,6 +23,7 @@ namespace Components {
 class Applications : public TreeWidget
 {
     Q_OBJECT
+private:
     QString device;
 private:
     void onDisable();
@@ -33,6 +35,8 @@ private:
     }
 private slots:
     void onDetails();
+    void onDisableFinished(const QVariant &, const QStringList &);
+    void onEnableFinished(const QVariant &, const QStringList &);
     void onFilesDropped(const QStringList &, const QModelIndex &);
     void onInstall();
     void onInstallFinished(const QVariant &);

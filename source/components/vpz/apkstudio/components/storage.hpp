@@ -40,15 +40,21 @@ private:
 private slots:
     void onCreate();
     void onCopy();
+    void onCopyFinished(const QVariant &);
     void onDetails();
     void onDoubleClicked(const QModelIndex &);
     void onEdit();
     void onFilesDropped(const QStringList &, const QModelIndex &);
     void onItemsDropped(const QModelIndexList &, const QModelIndex &, Qt::DropAction);
     void onMove();
+    void onMoveFinished(const QVariant &, const QStringList &);
+    void onPullFinished(const QVariant &);
+    void onPushFinished(const QVariant &);
     void onRefresh();
     void onRemove();
+    void onRemoveFinished(const QVariant &, const QStringList &);
     void onRename();
+    void onRenameFinished(const QVariant &, const QStringList &);
     void onReturn();
     void onUp();
 public:

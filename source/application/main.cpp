@@ -7,6 +7,7 @@
 #include "helpers/settings.hpp"
 #include "resources/constant.hpp"
 #include "resources/embedded.hpp"
+#include "resources/variant.hpp"
 #include "windows/ide.hpp"
 
 using namespace VPZ::APKStudio;
@@ -17,6 +18,7 @@ int main(int count, char *arguments[])
     QCoreApplication::setOrganizationName(APPLICATION_AUTHOR);
     // -- //
     qRegisterMetaType<QVariant>("QVariant");
+    qRegisterMetaType<QVector<int> >("QVector<int>");
     // -- //
     int code = 0;
     do {

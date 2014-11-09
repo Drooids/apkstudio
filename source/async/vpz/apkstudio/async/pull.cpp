@@ -22,7 +22,7 @@ void Pull::start()
         } else
             failed++;
     }
-    emit finished(QVariant::fromValue(QPair<int, int>(failed, successful)));
+    emit finished(QVariant::fromValue(QPair<int, int>(successful, failed)));
 }
 
 } // namespace Async
