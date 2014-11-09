@@ -126,6 +126,10 @@ void Storage::onCopy(const QVector<File> &files, const QString &destination)
         QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
+void Storage::onCopyFinished(const QVariant &result)
+{
+}
+
 void Storage::onCreate()
 {
     bool ok = false;
@@ -258,6 +262,10 @@ void Storage::onMove(const QStringList &files, const QString &destination)
         QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(destination), QMessageBox::Close);
 }
 
+void Storage::onMoveFinished(const QVariant &result, const QStringList &moved)
+{
+}
+
 void Storage::onPull()
 {
     QVector<File> files = selected();
@@ -290,6 +298,10 @@ void Storage::onPull()
         QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
+void Storage::onPullFinished(const QVariant &result)
+{
+}
+
 void Storage::onPush()
 {
     QFileDialog dialog(this, translate("title_select"), Helpers::Settings::previousDirectory());
@@ -302,6 +314,10 @@ void Storage::onPush()
         return;
     Helpers::Settings::previousDirectory(dialog.directory().absolutePath());
     onFilesDropped(files, QModelIndex());
+}
+
+void Storage::onPushFinished(const QVariant &result)
+{
 }
 
 void Storage::onRefresh()
@@ -420,6 +436,10 @@ void Storage::onRemove()
         QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
+void Storage::onRemoveFinished(const QVariant &result, const QStringList &removed)
+{
+}
+
 void Storage::onRename()
 {
     QVector<File> files = selected();
@@ -457,6 +477,11 @@ void Storage::onRename()
     }
     if (failed >= 1)
         QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+}
+
+void Storage::onRenameFinished(const QVariant &result, const QStringList &a)
+{
+    Q_UNUSED(a)
 }
 
 void Storage::onReturn()

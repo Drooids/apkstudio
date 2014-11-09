@@ -15,8 +15,8 @@ void Copy::start()
 {
     int failed = 0;
     int successful = 0;
-    foreach(const QString &path, files.keys()) {
-        if (ADB::instance()->copy(device, path, destination, files[path]))
+    foreach(const QString &file, files.keys()) {
+        if (ADB::instance()->copy(device, file, destination, files[file]))
             successful++;
         else
             failed++;
