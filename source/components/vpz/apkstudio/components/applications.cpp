@@ -172,9 +172,10 @@ void Applications::onPull()
     if (folders.count() != 1)
         return;
     QDir directory(folders.first());
-    QStringList paths;
-    foreach (const Application &application, applications)
-        paths << application.path;
+    Helpers::Settings::previousDirectory(directory.absolutePath());
+    QMap<QString, bool> paths;
+    foreach(const Application &application, applications)
+        paths[application.path] = false;
     Pull *pull = new Pull(device, paths, directory);
     connections.append(connect(pull, SIGNAL(finished(QVariant)), this, SLOT(onPullFinished(QVariant)), Qt::QueuedConnection));
     Tasks::instance()->add(translate("task_pull").arg(QString::number(paths.count())), pull);

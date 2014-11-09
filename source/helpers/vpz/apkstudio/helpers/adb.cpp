@@ -368,6 +368,11 @@ void ADB::kill()
 
 bool ADB::move(const QString &device, const QStringList &source, const QString &destination) const
 {
+    return false;
+}
+
+bool ADB::move(const QString &device, const QString &source, const QString &destination) const
+{
     QStringList arguments("-s");
     arguments << device;
     arguments << "shell";
@@ -377,7 +382,7 @@ bool ADB::move(const QString &device, const QStringList &source, const QString &
         arguments << QString("mv %1 %2").arg(quote(source), quote(destination));
     } else {
         arguments << "mv";
-        arguments << source.join(' ');
+        arguments << source;
         arguments << destination;
     }
     return execute(arguments).isEmpty();

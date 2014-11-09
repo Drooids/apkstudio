@@ -1442,6 +1442,30 @@
         <translation>Successfully renamed: %1, failed: %2</translation>
     </message>
     <message>
+        <source>task_copy</source>
+        <translation>Copy %1 file(s)</translation>
+    </message>
+    <message>
+        <source>task_move</source>
+        <translation>Move %1 file(s)</translation>
+    </message>
+    <message>
+        <source>task_pull</source>
+        <translation>Pull %1 file(s)</translation>
+    </message>
+    <message>
+        <source>task_push</source>
+        <translation>Push %1 file(s)</translation>
+    </message>
+    <message>
+        <source>task_rename</source>
+        <translation>Rename %1 file(s)</translation>
+    </message>
+    <message>
+        <source>task_remove</source>
+        <translation>Remove %1 file(s)</translation>
+    </message>
+    <message>
         <source>title_browse</source>
         <translation>Select Folder</translation>
     </message>

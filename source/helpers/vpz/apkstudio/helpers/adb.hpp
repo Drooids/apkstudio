@@ -47,6 +47,7 @@ public:
     bool install(const QString &, const QString &) const;
     static ADB *instance();
     void kill();
+    bool move(const QString &, const QString &, const QString &) const;
     bool move(const QString &, const QStringList &, const QString &) const;
     QVector<Resources::Music> music(const QString &) const;
     QVector<Resources::Partition> partitions(const QString &) const;

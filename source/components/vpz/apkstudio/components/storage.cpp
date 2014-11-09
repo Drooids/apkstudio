@@ -115,20 +115,19 @@ void Storage::onCopy(const QVector<File> &files, const QString &destination)
     int result =  QMessageBox::question(this, translate("title_copy"), translate("message_copy").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    int failed = 0;
-    int successful = 0;
-    foreach (const File &file, files) {
-        if (ADB::instance()->copy(device, file.path, destination, ((file.type == File::FOLDER) || (file.type == File::SYMLINK_FOLDER))))
-            successful++;
-        else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    QMap<QString, bool> paths;
+    foreach(const File &file, files)
+        paths[file.path] = ((file.type == File::FOLDER) || (file.type == File::SYMLINK_FOLDER));
+    Copy *copy = new Copy(device, paths, destination);
+    connections.append(connect(copy, SIGNAL(finished(QVariant)), this, SLOT(onCopyFinished(QVariant)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_copy").arg(QString::number(paths.count())), copy);
 }
 
 void Storage::onCopyFinished(const QVariant &result)
 {
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
 }
 
 void Storage::onCreate()
@@ -201,18 +200,9 @@ void Storage::onFilesDropped(const QStringList &files, const QModelIndex &at)
     int result =  QMessageBox::question(this, translate("title_push"), translate("message_push").arg(QString::number(files.count()), path), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    int failed = 0;
-    int successful = 0;
-    foreach (const QString &file, files) {
-        if (ADB::instance()->push(device, file, path))
-            successful++;
-        else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_push_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
-    if (successful >= 1)
-        onRefresh();
+    Push *push = new Push(device, files, path);
+    connections.append(connect(push, SIGNAL(finished(QVariant)), this, SLOT(onPushFinished(QVariant)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_push").arg(QString::number(files.count())), push);
 }
 
 void Storage::onItemsDropped(const QModelIndexList &rows, const QModelIndex &at, Qt::DropAction action)
@@ -254,17 +244,24 @@ void Storage::onMove()
 
 void Storage::onMove(const QStringList &files, const QString &destination)
 {
-    int result =  QMessageBox::question(this, translate("title_move"), translate("message_move").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
-    if (result != QMessageBox::Yes)
-        return;
-    if (ADB::instance()->move(device, files, destination))
-        onRefresh();
-    else
-        QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(destination), QMessageBox::Close);
+    Move *move = new Move(device, files, destination);
+    connections.append(connect(move, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onMoveFinished(QVariant, QStringList)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_move").arg(QString::number(files.count())), move);
 }
 
 void Storage::onMoveFinished(const QVariant &result, const QStringList &moved)
 {
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (moved.isEmpty())
+        return;
+    foreach (const QString &path, moved) {
+        QList<QTreeWidgetItem *> rows = tree->findItems(path.section('/', -1, -1), Qt::MatchExactly, 0);
+        if (rows.count() != 1)
+            continue;
+        delete rows.first();
+    }
 }
 
 void Storage::onPull()
@@ -282,25 +279,19 @@ void Storage::onPull()
         return;
     QDir directory(folders.first());
     Helpers::Settings::previousDirectory(directory.absolutePath());
-    int failed = 0;
-    int successful = 0;
-    foreach (const File &file, files) {
-        if (ADB::instance()->pull(device, file.path, directory.absolutePath())) {
-            if ((file.type == File::FOLDER) || (file.type == File::SYMLINK_FOLDER))
-                successful++;
-            else if (directory.exists(file.name))
-                successful++;
-            else
-                failed++;
-        } else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    QMap<QString, bool> paths;
+    foreach(const File &file, files)
+        paths[file.path] = ((file.type == File::FOLDER) || (file.type == File::SYMLINK_FOLDER));
+    Pull *pull = new Pull(device, paths, directory);
+    connections.append(connect(pull, SIGNAL(finished(QVariant)), this, SLOT(onPullFinished(QVariant)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_pull").arg(QString::number(paths.count())), pull);
 }
 
 void Storage::onPullFinished(const QVariant &result)
 {
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
 }
 
 void Storage::onPush()
@@ -319,6 +310,11 @@ void Storage::onPush()
 
 void Storage::onPushFinished(const QVariant &result)
 {
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_push_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (pair.first >= 1)
+        onRefresh();
 }
 
 void Storage::onRefresh()
@@ -424,7 +420,7 @@ void Storage::onRemove()
     QMap<QString, bool> removeable;
     foreach (const File &file, files)
         removeable[file.path] = ((file.type == File::FOLDER) ||(file.type == File::SYMLINK_FOLDER));
-    Remove *remove = new Remove(device, renameable);
+    Remove *remove = new Remove(device, removeable);
     connections.append(connect(remove, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onRemoveFinished(QVariant, QStringList)), Qt::QueuedConnection));
     Tasks::instance()->add(translate("task_remove").arg(QString::number(removeable.count())), remove);
 }
@@ -437,7 +433,7 @@ void Storage::onRemoveFinished(const QVariant &result, const QStringList &remove
     if (removed.isEmpty())
         return;
     foreach (const QString &path, removed) {
-        QList<QTreeWidgetItem *> rows = findItems(path.section('/', -1, -1), Qt::MatchExactly, 1);
+        QList<QTreeWidgetItem *> rows = tree->findItems(path.section('/', -1, -1), Qt::MatchExactly, 0);
         if (rows.count() != 1)
             continue;
         delete rows.first();
@@ -454,8 +450,6 @@ void Storage::onRename()
     if (!ok || name.trimmed().isEmpty())
         return;
     bool multiple = (files.count() > 1);
-    int failed = 0;
-    int successful = 0;
     QMap<QString, QString> renameable;
     for (int i = 0; i < files.count(); ++i) {
         QString newname(name);
@@ -466,12 +460,10 @@ void Storage::onRename()
         newpath.append('/');
         newpath.append(newname);
         renameable[file.path] = newpath;
-        Move *rename = new Move(device, renameable);
-        connections.append(connect(rename, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onRenameFinished(QVariant, QStringList)), Qt::QueuedConnection));
-        Tasks::instance()->add(translate("task_rename").arg(QString::number(renameable.count())), rename);
     }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    Rename *rename = new Rename(device, renameable);
+    connections.append(connect(rename, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onRenameFinished(QVariant, QStringList)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_rename").arg(QString::number(renameable.count())), rename);
 }
 
 void Storage::onRenameFinished(const QVariant &result, const QStringList &a)

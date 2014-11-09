@@ -204,7 +204,7 @@ void Photos::onRename()
         QString newpath(file.path.section('/', 0, -2));
         newpath.append('/');
         newpath.append(newname);
-        if (ADB::instance()->rename(device, file.path, newpath)) {
+        if (ADB::instance()->move(device, file.path, newpath)) {
             successful++;
             QList<QTreeWidgetItem *> rows = findItems(file.name, Qt::MatchExactly, 0);
             if (rows.count() != 1)

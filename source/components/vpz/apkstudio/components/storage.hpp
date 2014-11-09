@@ -13,6 +13,7 @@
 #include "async/pull.hpp"
 #include "async/push.hpp"
 #include "async/remove.hpp"
+#include "async/rename.hpp"
 #include "helpers/adb.hpp"
 #include "helpers/format.hpp"
 #include "helpers/text.hpp"
