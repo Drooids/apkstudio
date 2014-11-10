@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include "helpers/adb.hpp"
+#include "helpers/apktool.hpp"
 #include "helpers/settings.hpp"
 #include "helpers/text.hpp"
 #include "dockable.hpp"

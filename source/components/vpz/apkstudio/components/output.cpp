@@ -50,9 +50,9 @@ void Output::createApktoolTab()
 {
     QWidget *tab = new QWidget(tabs);
     QVBoxLayout *layout = new QVBoxLayout(tab);
-    apk_tool = new QTextEdit(tab);
-    apk_tool->setReadOnly(true);
-    layout->addWidget(apk_tool);
+    Terminal *terminal = new Terminal("java", tab);
+    connections.append(connect(apktool::instance(), SIGNAL(commandExecuted(QStringList, QStringList)), terminal, SLOT(onCommandExecuted(QStringList, QStringList))));
+    layout->addWidget(terminal);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(1);
     tab->setLayout(layout);

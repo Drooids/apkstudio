@@ -41,7 +41,8 @@ HEADERS += \
     vpz/apkstudio/components/clearable.hpp \
     vpz/apkstudio/components/treewidget.hpp \
     vpz/apkstudio/components/task.hpp \
-    vpz/apkstudio/components/listwidget.hpp
+    vpz/apkstudio/components/listwidget.hpp \
+    vpz/apkstudio/components/framework.hpp
 
 SOURCES += \
     vpz/apkstudio/components/coder.cpp \
@@ -70,7 +71,8 @@ SOURCES += \
     vpz/apkstudio/components/clearable.cpp \
     vpz/apkstudio/components/treewidget.cpp \
     vpz/apkstudio/components/task.cpp \
-    vpz/apkstudio/components/listwidget.cpp
+    vpz/apkstudio/components/listwidget.cpp \
+    vpz/apkstudio/components/framework.cpp
 
 # Include referenced co-projects & libraries
 win32 {

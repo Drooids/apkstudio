@@ -99,5 +99,6 @@
         <file>icon/film.png</file>
         <file>icon/mobile_phone_restart.png</file>
         <file>icon/mobile_phone_minus.png</file>
+        <file>icon/wrench_screwdriver.png</file>
     </qresource>
 </RCC>

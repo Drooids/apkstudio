@@ -495,6 +495,49 @@
     </message>
 </context>
 <context>
+    <name>framework</name>
+    <message>
+        <source>button_browse</source>
+        <translation>Browse</translation>
+    </message>
+    <message>
+        <source>button_remove</source>
+        <translation>Remove</translation>
+    </message>
+    <message>
+        <source>header_id</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>header_tag</source>
+        <translation>Tag</translation>
+    </message>
+    <message>
+        <source>header_time</source>
+        <translation>Added On</translation>
+    </message>
+    <message>
+        <source>message_framework_delete</source>
+        <translation>Do you really wish to remove selected framework?</translation>
+    </message>
+    <message>
+        <source>message_framework_failed</source>
+        <translation>Failed to install selected framework</translation>
+    </message>
+    <message>
+        <source>task_framework</source>
+        <translation>Installing framework</translation>
+    </message>
+    <message>
+        <source>title_confirm</source>
+        <translation>Confirm</translation>
+    </message>
+    <message>
+        <source>title_failure</source>
+        <translation>Failure</translation>
+    </message>
+</context>
+<context>
     <name>ide</name>
     <message>
         <source>message_close</source>
@@ -1263,10 +1306,6 @@
         <translation>Cancel</translation>
     </message>
     <message>
-        <source>button_remove</source>
-        <translation>Remove</translation>
-    </message>
-    <message>
         <source>button_save</source>
         <translation>Save</translation>
     </message>
@@ -1281,18 +1320,6 @@
     <message>
         <source>color_white</source>
         <translation>White</translation>
-    </message>
-    <message>
-        <source>header_id</source>
-        <translation>ID</translation>
-    </message>
-    <message>
-        <source>header_tag</source>
-        <translation>Tag</translation>
-    </message>
-    <message>
-        <source>header_time</source>
-        <translation>Added On</translation>
     </message>
     <message>
         <source>item_apktool</source>
@@ -1397,10 +1424,6 @@
     <message>
         <source>language_english</source>
         <translation>English</translation>
-    </message>
-    <message>
-        <source>task_framework</source>
-        <translation>Installing framework</translation>
     </message>
     <message>
         <source>theme_dark</source>

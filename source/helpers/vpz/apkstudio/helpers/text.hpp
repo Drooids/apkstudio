@@ -12,6 +12,7 @@ class Text
 {
 public:
     static QString capitalize(const QString &, bool = false);
+    static QString random(const int = 8);
     static QString translate(const char *, const char *);
 };
 
