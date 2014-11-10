@@ -140,8 +140,9 @@ void Explorer::createToolbar()
         refresh->setEnabled(true);
     }));
     connections.append(connect(tabs, static_cast<void(QTabWidget::*)(int)>(&QTabWidget::tabCloseRequested), [ this ] (int index) {
-        delete this->tabs->widget(index);
+        QWidget *widget = this->tabs->widget(index);
         this->tabs->removeTab(index);
+        delete widget;
     }));
     refresh->setEnabled(false);
 }

@@ -26,13 +26,27 @@ Tasks::Tasks(QWidget *parent) :
 void Tasks::add(const QString &title, Async::Task *task)
 {
     Task *item = new Task(title, task, list);
-    connections.append(connect(item, &Task::finished, [ item ] () {
+    connections.append(connect(item, &Task::finished, [ item, this ] () {
         delete item;
+#ifdef Q_OS_WIN
+        if (this->list->count() <= 0)
+            progress->setVisible(false);
+#endif
     }));
     list->addItem(item);
     list->setItemWidget(item, item->widget);
     threads.start(task);
+#ifdef Q_OS_WIN
+    progress->setVisible(true);
+#endif
 }
+
+#ifdef Q_OS_WIN
+void Tasks::setProgress(QWinTaskbarProgress *progress)
+{
+    this->progress = progress;
+}
+#endif
 
 Tasks *Tasks::instance()
 {

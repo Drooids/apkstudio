@@ -8,6 +8,10 @@ CONFIG += c++11
 # Refrence QT framework dependencies
 QT += core gui widgets
 
+win32 {
+    QT += winextras
+}
+
 # Source files to be included/compiled within target
 HEADERS += \
     vpz/apkstudio/windows/ide.hpp \

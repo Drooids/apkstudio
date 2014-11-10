@@ -221,6 +221,14 @@ void IDE::onInitComplete()
         resize(Helpers::Settings::windowSize());
     setDockOptions(AnimatedDocks);
     setWindowTitle(translate("title_window"));
+#ifdef Q_OS_WIN
+    QWinTaskbarButton *button = new QWinTaskbarButton(this);
+    button->setWindow(windowHandle());
+    QWinTaskbarProgress *progress = button->progress();
+    progress->setMaximum(0);
+    progress->setMinimum(0);
+    tasks->setProgress(progress);
+#endif
 }
 
 void IDE::onOpenProject(const QString &path)

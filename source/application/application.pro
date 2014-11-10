@@ -50,6 +50,10 @@ OTHER_FILES += \
 # Refrence QT framework dependencies
 QT += core gui widgets
 
+win32 {
+    QT += winextras
+}
+
 # The only resources file including everything
 RESOURCES += ../../resource/resources.qrc
 

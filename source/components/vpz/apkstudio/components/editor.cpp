@@ -37,9 +37,10 @@ Editor::Editor(QStandardItemModel *model, QWidget *parent) :
     setLayout(layout);
     setMinimumSize(64, 64);
     connections.append(connect(tabs, static_cast<void(QTabWidget::*)(int)>(&QTabWidget::tabCloseRequested), [ this ] (int index) {
-        delete this->tabs->widget(index);
+        QWidget *widget = this->tabs->widget(index);
         this->files->removeItem(index);
         this->tabs->removeTab(index);
+        delete widget;
     }));
     connections.append(connect(tabs, static_cast<void(QTabWidget::*)(int)>(&QTabWidget::currentChanged), [ this ] (int index) {
         if (index < 0)

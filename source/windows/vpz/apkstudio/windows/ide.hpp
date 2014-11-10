@@ -7,6 +7,10 @@
 #include <QMessageBox>
 #include <QStandardItemModel>
 #include <QTimer>
+#ifdef Q_OS_WIN
+#   include <QWinTaskbarButton>
+#   include <QWinTaskbarProgress>
+#endif
 #include "components/devices.hpp"
 #include "components/editor.hpp"
 #include "components/files.hpp"

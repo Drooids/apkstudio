@@ -5,7 +5,13 @@
 # Enable support for newer c++ expressions
 CONFIG += c++11
 
+# Refrence QT framework dependencies
 QT += core gui widgets
+
+# Take advantage of QtWinEextras
+win32 {
+    QT += winextras
+}
 
 # Source files to be included/compiled within target
 HEADERS += \

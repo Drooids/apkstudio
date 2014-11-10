@@ -366,11 +366,6 @@ void ADB::kill()
     execute(QStringList("kill-server"));
 }
 
-bool ADB::move(const QString &device, const QStringList &source, const QString &destination) const
-{
-    return false;
-}
-
 bool ADB::move(const QString &device, const QString &source, const QString &destination) const
 {
     QStringList arguments("-s");

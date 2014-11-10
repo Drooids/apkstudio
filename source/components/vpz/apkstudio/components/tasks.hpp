@@ -2,6 +2,9 @@
 #define VPZ_APKSTUDIO_COMPONENTS_TASKS_HPP
 
 #include <QThreadPool>
+#ifdef Q_OS_WIN
+#   include <QWinTaskbarProgress>
+#endif
 #include "async/task.hpp"
 #include "helpers/settings.hpp"
 #include "helpers/text.hpp"
@@ -18,6 +21,9 @@ class Tasks : public Dockable
 {
     Q_OBJECT
 private:
+#ifdef Q_OS_WIN
+    QWinTaskbarProgress *progress;
+#endif
     ListWidget *list;
     QThreadPool threads;
     static Tasks *self;
@@ -26,8 +32,11 @@ private:
         return Helpers::Text::translate("tasks", key);
     }
 public:
-    explicit Tasks(QWidget *parent = 0);
+    explicit Tasks(QWidget * = 0);
     void add(const QString &, Async::Task *);
+#ifdef Q_OS_WIN
+    void setProgress(QWinTaskbarProgress *);
+#endif
     static Tasks *instance();
 };
 

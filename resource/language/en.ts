@@ -1001,6 +1001,26 @@
         <translation>Successfully renamed: %1, failed: %2</translation>
     </message>
     <message>
+        <source>task_copy</source>
+        <translation>Copy %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_move</source>
+        <translation>Move %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_pull</source>
+        <translation>Pull %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_remove</source>
+        <translation>Remove %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_rename</source>
+        <translation>Rename %1 File(s)</translation>
+    </message>
+    <message>
         <source>title_browse</source>
         <translation>Select Folder</translation>
     </message>
@@ -1163,6 +1183,26 @@
     <message>
         <source>message_rename_failed</source>
         <translation>Successfully renamed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>task_copy</source>
+        <translation>Copy %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_move</source>
+        <translation>Move %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_pull</source>
+        <translation>Pull %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_remove</source>
+        <translation>Remove %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_rename</source>
+        <translation>Rename %1 File(s)</translation>
     </message>
     <message>
         <source>title_browse</source>
@@ -1629,6 +1669,26 @@
     <message>
         <source>message_rename_failed</source>
         <translation>Successfully renamed: %1, failed: %2</translation>
+    </message>
+    <message>
+        <source>task_copy</source>
+        <translation>Copy %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_move</source>
+        <translation>Move %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_pull</source>
+        <translation>Pull %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_remove</source>
+        <translation>Remove %1 File(s)</translation>
+    </message>
+    <message>
+        <source>task_rename</source>
+        <translation>Rename %1 File(s)</translation>
     </message>
     <message>
         <source>title_browse</source>

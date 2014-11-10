@@ -1,5 +1,6 @@
 #include "music.hpp"
 
+using namespace VPZ::APKStudio::Async;
 using namespace VPZ::APKStudio::Helpers;
 
 namespace VPZ {
@@ -71,16 +72,19 @@ void Music::onCopy()
     int result =  QMessageBox::question(this, translate("title_copy"), translate("message_copy").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    int failed = 0;
-    int successful = 0;
-    foreach (const Resources::Music &file, files) {
-        if (ADB::instance()->copy(device, file.path, destination, false))
-            successful++;
-        else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    QMap<QString, bool> paths;
+    foreach (const Resources::Music &file, files)
+        paths[file.path] = false;
+    Copy *copy = new Copy(device, paths, destination);
+    connections.append(connect(copy, SIGNAL(finished(QVariant)), this, SLOT(onCopyFinished(QVariant)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_copy").arg(QString::number(paths.count())), copy);
+}
+
+void Music::onCopyFinished(const QVariant &result)
+{
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_copy_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
 }
 
 void Music::onDetails()
@@ -106,10 +110,19 @@ void Music::onMove()
     int result =  QMessageBox::question(this, translate("title_move"), translate("message_move").arg(QString::number(files.count()), destination), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    if (ADB::instance()->move(device, sources, destination))
+    Move *move = new Move(device, sources, destination);
+    connections.append(connect(move, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onMoveFinished(QVariant, QStringList)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_move").arg(QString::number(files.count())), move);
+}
+
+void Music::onMoveFinished(const QVariant &result, const QStringList &a)
+{
+    Q_UNUSED(a)
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (pair.first >= 1)
         onRefresh();
-    else
-        QMessageBox::critical(this, translate("title_failure"), translate("message_move_failed").arg(destination), QMessageBox::Close);
 }
 
 void Music::onPull()
@@ -127,16 +140,19 @@ void Music::onPull()
         return;
     QDir directory(folders.first());
     Helpers::Settings::previousDirectory(directory.absolutePath());
-    int failed = 0;
-    int successful = 0;
-    foreach (const Resources::Music &file, files) {
-        if (ADB::instance()->pull(device, file.path, directory.absolutePath()))
-            successful++;
-        else
-            failed++;
-    }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    QMap<QString, bool> paths;
+    foreach(const Resources::Music &file, files)
+        paths[file.path] = false;
+    Pull *pull = new Pull(device, paths, directory);
+    connections.append(connect(pull, SIGNAL(finished(QVariant)), this, SLOT(onPullFinished(QVariant)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_pull").arg(QString::number(paths.count())), pull);
+}
+
+void Music::onPullFinished(const QVariant &result)
+{
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_pull_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
 }
 
 void Music::onRefresh()
@@ -167,20 +183,27 @@ void Music::onRemove()
     int result =  QMessageBox::question(this, translate("title_remove"), translate("message_remove").arg(QString::number(files.count())), QMessageBox::No | QMessageBox::Yes);
     if (result != QMessageBox::Yes)
         return;
-    int failed = 0;
-    int successful = 0;
-    foreach (const Resources::Music &file, files) {
-        if (ADB::instance()->remove(device, file.path, false)) {
-            successful++;
-            QList<QTreeWidgetItem *> rows = findItems(file.name, Qt::MatchExactly, 0);
-            if (rows.count() != 1)
-                continue;
-            delete rows.first();
-        } else
-            failed++;
+    QMap<QString, bool> removeable;
+    foreach (const Resources::Music &file, files)
+        removeable[file.path] = false;
+    Remove *remove = new Remove(device, removeable);
+    connections.append(connect(remove, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onRemoveFinished(QVariant, QStringList)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_remove").arg(QString::number(removeable.count())), remove);
+}
+
+void Music::onRemoveFinished(const QVariant &result, const QStringList &removed)
+{
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (removed.isEmpty())
+        return;
+    foreach (const QString &path, removed) {
+        QList<QTreeWidgetItem *> rows = findItems(path.section('/', -1, -1), Qt::MatchExactly, 0);
+        if (rows.count() != 1)
+            continue;
+        delete rows.first();
     }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_remove_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
 }
 
 void Music::onRename()
@@ -193,8 +216,7 @@ void Music::onRename()
     if (!ok || name.trimmed().isEmpty())
         return;
     bool multiple = (files.count() > 1);
-    int failed = 0;
-    int successful = 0;
+    QMap<QString, QString> renameable;
     for (int i = 0; i < files.count(); ++i) {
         QString newname(name);
         if (multiple)
@@ -203,23 +225,21 @@ void Music::onRename()
         QString newpath(file.path.section('/', 0, -2));
         newpath.append('/');
         newpath.append(newname);
-        if (ADB::instance()->move(device, file.path, newpath)) {
-            successful++;
-            QList<QTreeWidgetItem *> rows = findItems(file.name, Qt::MatchExactly, 0);
-            if (rows.count() != 1)
-                continue;
-            file.name = newname;
-            file.path = newpath;
-            QTreeWidgetItem *row = rows.first();
-            for (int i = 0; i < 6; ++i)
-                row->setData(i, ROLE_STRUCT, QVariant::fromValue(file));
-            row->setText(0, newname);
-            row->setToolTip(0, newpath);
-        } else
-            failed++;
+        renameable[file.path] = newpath;
     }
-    if (failed >= 1)
-        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(successful), QString::number(failed)), QMessageBox::Close);
+    Rename *rename = new Rename(device, renameable);
+    connections.append(connect(rename, SIGNAL(finished(QVariant, QStringList)), this, SLOT(onRenameFinished(QVariant, QStringList)), Qt::QueuedConnection));
+    Tasks::instance()->add(translate("task_rename").arg(QString::number(renameable.count())), rename);
+}
+
+void Music::onRenameFinished(const QVariant &result, const QStringList &a)
+{
+    Q_UNUSED(a)
+    QPair<int, int> pair = result.value<QPair<int, int>>();
+    if (pair.second >= 1)
+        QMessageBox::critical(this, translate("title_failure"), translate("message_rename_failed").arg(QString::number(pair.first), QString::number(pair.second)), QMessageBox::Close);
+    if (pair.first >= 1)
+        onRefresh();
 }
 
 QVector<Resources::Music> Music::selected()

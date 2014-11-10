@@ -7,11 +7,17 @@
 #include <QMessageBox>
 #include <QShortcut>
 #include <QTreeWidget>
+#include "async/copy.hpp"
+#include "async/move.hpp"
+#include "async/pull.hpp"
+#include "async/remove.hpp"
+#include "async/rename.hpp"
 #include "helpers/adb.hpp"
 #include "helpers/format.hpp"
 #include "helpers/text.hpp"
 #include "resources/embedded.hpp"
 #include "resources/variant.hpp"
+#include "tasks.hpp"
 
 namespace VPZ {
 namespace APKStudio {
@@ -30,11 +36,16 @@ private:
     }
 private slots:
     void onCopy();
+    void onCopyFinished(const QVariant &);
     void onDetails();
     void onMove();
+    void onMoveFinished(const QVariant &, const QStringList &);
     void onPull();
+    void onPullFinished(const QVariant &);
     void onRemove();
+    void onRemoveFinished(const QVariant &, const QStringList &);
     void onRename();
+    void onRenameFinished(const QVariant &, const QStringList &);
 public:
     enum {
         ACTION_COPY = 1,
