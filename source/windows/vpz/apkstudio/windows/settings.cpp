@@ -1,5 +1,7 @@
 #include "settings.hpp"
 
+using namespace VPZ::APKStudio::Async;
+
 namespace VPZ {
 namespace APKStudio {
 namespace Windows {
@@ -119,7 +121,7 @@ void Settings::createApktoolTab()
         if (files.isEmpty())
             return;
         Helpers::Settings::previousDirectory(dialog.directory().absolutePath());
-        key->setText(files.first());
+        // TODO
     }));
     connections.append(connect(kbrowse, &QPushButton::clicked, [ key, this ] () {
         QFileDialog dialog(this, translate("title_select"), Helpers::Settings::previousDirectory(), "Private Key (*.pk8)");
