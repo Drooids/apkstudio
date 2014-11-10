@@ -47,6 +47,8 @@ public:
     static void javaHome(const QString &);
     static QString language();
     static void language(const QString &);
+    static int maxConcurrentTasks();
+    static void maxConcurrentTasks(const int);
     static bool maximized();
     static void maximized(const bool);
     static QString previousDirectory();

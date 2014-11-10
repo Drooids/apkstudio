@@ -10,13 +10,15 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
 #include <QPixmap>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QStackedWidget>
-#include <QLineEdit>
-#include <QListWidget>
+#include <QTreeWidget>
 #include <QVBoxLayout>
+#include "async/framework.hpp"
 #include "helpers/settings.hpp"
 #include "helpers/text.hpp"
 #include "dialog.hpp"
@@ -29,8 +31,9 @@ class Settings : public Dialog
 {
     Q_OBJECT
 private:
-    QStackedWidget *stack;
+    QTreeWidget *frameworks;
     QListWidget *list;
+    QStackedWidget *stack;
 private:
     void createApktoolTab();
     void createEditorTab();
@@ -41,8 +44,12 @@ private:
     static QString translate(const char *key) {
         return Helpers::Text::translate("settings", key);
     }
+private slots:
+    void onFrameworkInstalled(const QVariant &);
 public:
     explicit Settings(QWidget * = 0);
+public slots:
+    void onInitComplete();
 };
 
 } // namespace Windows

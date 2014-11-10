@@ -1,5 +1,7 @@
 #include "tasks.hpp"
 
+using namespace VPZ::APKStudio::Helpers;
+
 namespace VPZ {
 namespace APKStudio {
 namespace Components {
@@ -17,7 +19,7 @@ Tasks::Tasks(QWidget *parent) :
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     list->setMinimumSize(160, 160);
-    threads.setMaxThreadCount(2);
+    threads.setMaxThreadCount(Settings::maxConcurrentTasks());
     widget->setLayout(layout);
     setObjectName("tasks");
     setWidget(widget);

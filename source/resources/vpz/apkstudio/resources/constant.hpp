@@ -43,6 +43,7 @@
 #define SETTING_JAVA_HOME "java_home"
 #define SETTING_LANGUAGE "language"
 #define SETTING_MAXIMIZED "maximized"
+#define SETTING_MAXIMUM_CONCURRENT "max_concurrent"
 #define SETTING_PREVIOUS_DIRECTORY "previous_directory"
 #define SETTING_RECENT_FILES "recent_files"
 #define SETTING_ROOT_SHELL "root_shell"

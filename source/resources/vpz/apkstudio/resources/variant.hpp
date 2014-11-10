@@ -27,7 +27,8 @@ struct Device {
     enum Status {
         BOOTLOADER = 1,
         OFFLINE,
-        ONLINE
+        ONLINE,
+        UNAUTHORIZED
     } status;
     enum Type {
         DEVICE = 1,

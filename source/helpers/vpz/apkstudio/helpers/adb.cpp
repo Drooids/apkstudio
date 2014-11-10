@@ -206,10 +206,12 @@ QVector<Device> ADB::devices() const
         Device device;
         device.serial = parts.at(0).trimmed();
         QString status = parts.at(1).trimmed();
-        if (status == "bootloader")
+        if (QString::compare(status, "bootloader") == 0)
             device.status = Device::BOOTLOADER;
-        else if (status == "offline")
+        else if (QString::compare(status, "offline") == 0)
             device.status = Device::OFFLINE;
+        else if (QString::compare(status, "unauthorized") == 0)
+            device.status = Device::UNAUTHORIZED;
         else
             device.status = Device::ONLINE;
         if (regex.match(device.serial).hasMatch())

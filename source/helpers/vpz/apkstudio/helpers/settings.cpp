@@ -168,6 +168,16 @@ void Settings::language(const QString &name)
     set(SETTING_LANGUAGE, name);
 }
 
+int Settings::maxConcurrentTasks()
+{
+    return get(SETTING_MAXIMUM_CONCURRENT, 2).toInt();
+}
+
+void Settings::maxConcurrentTasks(const int threads)
+{
+    set(SETTING_MAXIMUM_CONCURRENT, threads);
+}
+
 bool Settings::maximized()
 {
     return get(SETTING_MAXIMIZED, false).value<bool>();

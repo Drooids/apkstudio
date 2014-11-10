@@ -59,11 +59,27 @@ void Settings::createApktoolTab()
     QLineEdit *certificate = new QLineEdit(widget);
     QLineEdit *framework = new QLineEdit(widget);
     QLineEdit *key = new QLineEdit(widget);
+    QHBoxLayout *buttons = new QHBoxLayout;
     QPushButton *cbrowse = new QPushButton(translate("button_browse"), widget);
     QPushButton *fbrowse = new QPushButton(translate("button_browse"), widget);
+    QPushButton *frbrowse = new QPushButton(translate("button_browse"), widget);
+    QPushButton *frremove = new QPushButton(translate("button_remove"), widget);
     QPushButton *kbrowse = new QPushButton(translate("button_browse"), widget);
+    frameworks = new QTreeWidget(widget);
+    buttons->addWidget(frbrowse);
+    buttons->addWidget(frremove);
     certificate->setText(Helpers::Settings::signingCertificate());
     framework->setText(Helpers::Settings::frameworkPath());
+    frameworks->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    frameworks->setRootIsDecorated(false);
+    frameworks->setMaximumHeight(160);
+    frameworks->setSelectionBehavior(QAbstractItemView::SelectRows);
+    frameworks->setSelectionMode(QAbstractItemView::SingleSelection);
+    frameworks->setSortingEnabled(true);
+    QStringList labels(translate("header_id"));
+    labels << translate("header_tag");
+    labels << translate("header_time");
+    frameworks->setHeaderLabels(labels);
     key->setText(Helpers::Settings::signingKey());
     layout->addRow(translate("label_framework"), framework);
     layout->addRow("", fbrowse);
@@ -71,6 +87,8 @@ void Settings::createApktoolTab()
     layout->addRow("", cbrowse);
     layout->addRow(translate("label_key"), key);
     layout->addRow("", kbrowse);
+    layout->addRow(translate("label_frameworks"), frameworks);
+    layout->addRow("", buttons);
     widget->setLayout(layout);
     connections.append(connect(cbrowse, &QPushButton::clicked, [ certificate, this ] () {
         QFileDialog dialog(this, translate("title_select"), Helpers::Settings::previousDirectory(), "x509 Certificate (*.pem)");
@@ -90,6 +108,18 @@ void Settings::createApktoolTab()
             return;
         Helpers::Settings::previousDirectory(path);
         framework->setText(path);
+    }));
+    connections.append(connect(frbrowse, &QPushButton::clicked, [ this ] () {
+        QFileDialog dialog(this, translate("title_select"), Helpers::Settings::previousDirectory(), "Framework APK (*.apk)");
+        dialog.setAcceptMode(QFileDialog::AcceptOpen);
+        dialog.setFileMode(QFileDialog::ExistingFile);
+        if (dialog.exec() != QFileDialog::Accepted)
+            return;
+        QStringList files = dialog.selectedFiles();
+        if (files.isEmpty())
+            return;
+        Helpers::Settings::previousDirectory(dialog.directory().absolutePath());
+        key->setText(files.first());
     }));
     connections.append(connect(kbrowse, &QPushButton::clicked, [ key, this ] () {
         QFileDialog dialog(this, translate("title_select"), Helpers::Settings::previousDirectory(), "Private Key (*.pk8)");
@@ -113,6 +143,8 @@ void Settings::createApktoolTab()
     stack->addWidget(widget);
     fixButtonSize(cbrowse);
     fixButtonSize(fbrowse);
+    fixButtonSize(frbrowse);
+    fixButtonSize(frremove);
     fixButtonSize(kbrowse);
 }
 
@@ -187,6 +219,7 @@ void Settings::createGeneralTab()
     QPushButton *browse = new QPushButton(translate("button_browse"), widget);
     QComboBox *language = new QComboBox(widget);
     QCheckBox *root = new QCheckBox(widget);
+    QSpinBox *tasks = new QSpinBox(widget);
     QComboBox *theme = new QComboBox(widget);
     binary->setText(Helpers::Settings::binaryPath());
     language->addItem(translate("language_english"), "en");
@@ -196,7 +229,11 @@ void Settings::createGeneralTab()
     layout->addRow(translate("label_binary"), binary);
     layout->addRow("", browse);
     layout->addRow(translate("label_root"), root);
+    layout->addRow(translate("label_tasks"), tasks);
     root->setChecked(Helpers::Settings::rootShell());
+    tasks->setMaximum(10);
+    tasks->setMinimum(2);
+    tasks->setValue(Helpers::Settings::maxConcurrentTasks());
     theme->addItem(translate("theme_default"), "default");
     theme->addItem(translate("theme_light"), "light");
     theme->addItem(translate("theme_dark"), "dark");
@@ -209,11 +246,12 @@ void Settings::createGeneralTab()
         Helpers::Settings::previousDirectory(path);
         binary->setText(path);
     }));
-    connections.append(connect(this, &QDialog::accepted, [ binary, language, root, theme ] () {
+    connections.append(connect(this, &QDialog::accepted, [ binary, language, root, tasks, theme ] () {
         Helpers::Settings::binaryPath(binary->text());
         Helpers::Settings::language(language->itemData(language->currentIndex()).value<QString>());
         Helpers::Settings::rootShell(root->isChecked());
         Helpers::Settings::theme(theme->itemData(theme->currentIndex()).value<QString>());
+        Helpers::Settings::maxConcurrentTasks(tasks->value());
     }));
     list->addItem(translate("item_general"));
     stack->addWidget(widget);
@@ -278,6 +316,17 @@ void Settings::fixButtonSize(QPushButton *button)
     option.initFrom(button);
     option.rect.setSize(size);
     button->setMaximumSize(button->style()->sizeFromContents(QStyle::CT_PushButton, &option, size, button));
+}
+
+void Settings::onFrameworkInstalled(const QVariant &result)
+{
+    if (!result.toBool())
+        return;
+}
+
+void Settings::onInitComplete()
+{
+    resize(minimumSize());
 }
 
 } // namespace Windows

@@ -305,6 +305,10 @@
         <translation>Online</translation>
     </message>
     <message>
+        <source>status_unauthorized</source>
+        <translation>Unauthorized</translation>
+    </message>
+    <message>
         <source>title_dock</source>
         <translation>Devices</translation>
     </message>
@@ -1259,6 +1263,10 @@
         <translation>Cancel</translation>
     </message>
     <message>
+        <source>button_remove</source>
+        <translation>Remove</translation>
+    </message>
+    <message>
         <source>button_save</source>
         <translation>Save</translation>
     </message>
@@ -1273,6 +1281,18 @@
     <message>
         <source>color_white</source>
         <translation>White</translation>
+    </message>
+    <message>
+        <source>header_id</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <source>header_tag</source>
+        <translation>Tag</translation>
+    </message>
+    <message>
+        <source>header_time</source>
+        <translation>Added On</translation>
     </message>
     <message>
         <source>item_apktool</source>
@@ -1323,6 +1343,10 @@
         <translation>Frameworks Path</translation>
     </message>
     <message>
+        <source>label_frameworks</source>
+        <translation>Frameworks</translation>
+    </message>
+    <message>
         <source>label_heap</source>
         <translation>Maximum Heap (MBs)</translation>
     </message>
@@ -1355,6 +1379,10 @@
         <translation>Tab Width</translation>
     </message>
     <message>
+        <source>label_tasks</source>
+        <translation>Maximum Concurrent Tasks</translation>
+    </message>
+    <message>
         <source>label_theme</source>
         <translation>Theme</translation>
     </message>
@@ -1369,6 +1397,10 @@
     <message>
         <source>language_english</source>
         <translation>English</translation>
+    </message>
+    <message>
+        <source>task_framework</source>
+        <translation>Installing framework</translation>
     </message>
     <message>
         <source>theme_dark</source>

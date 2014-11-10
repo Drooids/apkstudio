@@ -19,7 +19,8 @@ HEADERS += \
     vpz/apkstudio/async/move.hpp \
     vpz/apkstudio/async/push.hpp \
     vpz/apkstudio/async/remove.hpp \
-    vpz/apkstudio/async/rename.hpp
+    vpz/apkstudio/async/rename.hpp \
+    vpz/apkstudio/async/framework.hpp
 
 SOURCES += \
     vpz/apkstudio/async/task.cpp \
@@ -31,7 +32,8 @@ SOURCES += \
     vpz/apkstudio/async/move.cpp \
     vpz/apkstudio/async/push.cpp \
     vpz/apkstudio/async/remove.cpp \
-    vpz/apkstudio/async/rename.cpp
+    vpz/apkstudio/async/rename.cpp \
+    vpz/apkstudio/async/framework.cpp
 
 # Include referenced co-projects & libraries
 win32 {

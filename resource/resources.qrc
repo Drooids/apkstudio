@@ -98,5 +98,6 @@
         <file>icon/music.png</file>
         <file>icon/film.png</file>
         <file>icon/mobile_phone_restart.png</file>
+        <file>icon/mobile_phone_minus.png</file>
     </qresource>
 </RCC>

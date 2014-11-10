@@ -226,6 +226,10 @@ void Devices::onRefresh()
             row->setIcon(0, ::icon("mobile_phone"));
             row->setToolTip(0, translate("status_online"));
             break;
+        case Device::UNAUTHORIZED:
+            row->setIcon(0, ::icon("mobile_phone_minus"));
+            row->setToolTip(0, translate("status_unauthorized"));
+            break;
         default:
             row->setIcon(0, ::icon("mobile_phone_off"));
             row->setToolTip(0, translate("status_offline"));

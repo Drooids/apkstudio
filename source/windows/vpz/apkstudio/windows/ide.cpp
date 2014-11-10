@@ -186,6 +186,7 @@ void IDE::onActionSettings()
 {
     Settings *settings = new Settings(this);
     settings->open();
+    QTimer::singleShot(0, settings, SLOT(onInitComplete()));
 }
 
 void IDE::onActionToggle(QAction *toggle)
