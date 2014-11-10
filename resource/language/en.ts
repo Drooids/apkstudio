@@ -518,7 +518,7 @@
     </message>
     <message>
         <source>message_framework_delete</source>
-        <translation>Do you really wish to remove selected framework?</translation>
+        <translation>Do you really wish to remove %1?</translation>
     </message>
     <message>
         <source>message_framework_failed</source>
