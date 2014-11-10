@@ -113,6 +113,7 @@ void IDE::onActionOpenApk()
     QStringList files = dialog.selectedFiles();
     if (files.size() != 1)
         return;
+    (new Project(files.first(), this))->exec();
 }
 
 void IDE::onActionOpenFile()

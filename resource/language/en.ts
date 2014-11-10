@@ -1277,6 +1277,13 @@
     </message>
 </context>
 <context>
+    <name>project</name>
+    <message>
+        <source>title_window</source>
+        <translation>New Project</translation>
+    </message>
+</context>
+<context>
     <name>projects</name>
     <message>
         <source>tab_active_project</source>

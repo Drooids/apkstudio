@@ -29,6 +29,7 @@
 #include "explorer.hpp"
 #include "information.hpp"
 #include "logcat.hpp"
+#include "project.hpp"
 #include "settings.hpp"
 
 namespace VPZ {
