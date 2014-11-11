@@ -115,9 +115,9 @@ void Settings::createApktoolTab()
     widget->setLayout(layout);
     list->addItem(translate("item_apktool"));
     stack->addWidget(widget);
-    fixButtonSize(cbrowse);
-    fixButtonSize(fbrowse);
-    fixButtonSize(kbrowse);
+    Helpers::UI::resizeButton(cbrowse);
+    Helpers::UI::resizeButton(fbrowse);
+    Helpers::UI::resizeButton(kbrowse);
 }
 
 void Settings::createEditorTab()
@@ -227,7 +227,7 @@ void Settings::createGeneralTab()
     }));
     list->addItem(translate("item_general"));
     stack->addWidget(widget);
-    fixButtonSize(browse);
+    Helpers::UI::resizeButton(browse);
 }
 
 void Settings::createJavaTab()
@@ -259,7 +259,7 @@ void Settings::createJavaTab()
     }));
     list->addItem(translate("item_java"));
     stack->addWidget(widget);
-    fixButtonSize(browse);
+    Helpers::UI::resizeButton(browse);
 }
 
 void Settings::createViewerTab()
@@ -278,16 +278,6 @@ void Settings::createViewerTab()
     }));
     list->addItem(translate("item_viewer"));
     stack->addWidget(widget);
-}
-
-void Settings::fixButtonSize(QPushButton *button)
-{
-    QSize size = button->fontMetrics().size(Qt::TextShowMnemonic, button->text());
-    size.setWidth(size.width() + 12);
-    QStyleOptionButton option;
-    option.initFrom(button);
-    option.rect.setSize(size);
-    button->setMaximumSize(button->style()->sizeFromContents(QStyle::CT_PushButton, &option, size, button));
 }
 
 void Settings::onInitComplete()

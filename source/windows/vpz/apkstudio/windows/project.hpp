@@ -11,6 +11,7 @@
 #include "components/framework.hpp"
 #include "helpers/settings.hpp"
 #include "helpers/text.hpp"
+#include "helpers/ui.hpp"
 #include "resources/embedded.hpp"
 #include "dialog.hpp"
 

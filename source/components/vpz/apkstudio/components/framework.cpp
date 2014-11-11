@@ -56,20 +56,19 @@ Framework::Framework(QWidget *parent) :
     labels << translate("header_tag");
     labels << translate("header_time");
     tree->setHeaderLabels(labels);
-    fixButtonSize(browse);
-    fixButtonSize(remove);
+    Helpers::UI::resizeButton(browse);
+    Helpers::UI::resizeButton(remove);
     refreshFrameworks();
     setLayout(layout);
 }
 
-void Framework::fixButtonSize(QPushButton *button)
+void Framework::onFrameworkInstalled(const QVariant &result)
 {
-    QSize size = button->fontMetrics().size(Qt::TextShowMnemonic, button->text());
-    size.setWidth(size.width() + 12);
-    QStyleOptionButton option;
-    option.initFrom(button);
-    option.rect.setSize(size);
-    button->setMaximumSize(button->style()->sizeFromContents(QStyle::CT_PushButton, &option, size, button));
+    if (result.toBool()) {
+        refreshFrameworks();
+        return;
+    }
+    QMessageBox::critical(this, translate("title_failure"), translate("message_framework_failed"), QMessageBox::Close);
 }
 
 void Framework::refreshFrameworks()
@@ -98,15 +97,6 @@ void Framework::refreshFrameworks()
         tree->addTopLevelItem(framework);
     }
     tree->sortByColumn(2, Qt::DescendingOrder);
-}
-
-void Framework::onFrameworkInstalled(const QVariant &result)
-{
-    if (result.toBool()) {
-        refreshFrameworks();
-        return;
-    }
-    QMessageBox::critical(this, translate("title_failure"), translate("message_framework_failed"), QMessageBox::Close);
 }
 
 Framework::~Framework()

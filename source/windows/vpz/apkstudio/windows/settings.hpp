@@ -20,6 +20,7 @@
 #include "components/tasks.hpp"
 #include "helpers/settings.hpp"
 #include "helpers/text.hpp"
+#include "helpers/ui.hpp"
 #include "dialog.hpp"
 
 namespace VPZ {

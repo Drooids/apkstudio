@@ -39,6 +39,7 @@ Project::Project(const QString &apk, QWidget *parent) :
     setLayout(layout);
     setWindowIcon(::icon("create"));
     setWindowTitle(translate("title_window"));
+    Helpers::UI::resizeButton(browse);
 }
 
 } // namespace Windows

@@ -12,6 +12,7 @@
 #include "helpers/../../../flowlayout.hpp"
 #include "helpers/format.hpp"
 #include "helpers/text.hpp"
+#include "helpers/ui.hpp"
 #include "tasks.hpp"
 
 namespace VPZ {
@@ -25,7 +26,6 @@ private:
     QList<QMetaObject::Connection> connections;
     QTreeWidget *tree;
 private:
-    void fixButtonSize(QPushButton *);
     void refreshFrameworks();
     static QString translate(const char *key) {
         return Helpers::Text::translate("framework", key);

@@ -27,7 +27,8 @@ HEADERS += \
     vpz/apkstudio/helpers/apktool.hpp \
     vpz/apkstudio/helpers/realtime.hpp \
     vpz/apkstudio/helpers/projects.hpp \
-    flowlayout.hpp
+    flowlayout.hpp \
+    vpz/apkstudio/helpers/ui.hpp
 
 SOURCES += \
     vpz/apkstudio/helpers/text.cpp \
@@ -43,4 +44,5 @@ SOURCES += \
     vpz/apkstudio/helpers/apktool.cpp \
     vpz/apkstudio/helpers/realtime.cpp \
     vpz/apkstudio/helpers/projects.cpp \
-    flowlayout.cpp
+    flowlayout.cpp \
+    vpz/apkstudio/helpers/ui.cpp
