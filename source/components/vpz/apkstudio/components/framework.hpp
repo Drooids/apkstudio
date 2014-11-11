@@ -1,7 +1,6 @@
 #ifndef VPZ_APKSTUDIO_COMPONENTS_FRAMEWORK_HPP
 #define VPZ_APKSTUDIO_COMPONENTS_FRAMEWORK_HPP
 
-#include <QBoxLayout>
 #include <QDirIterator>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -10,6 +9,7 @@
 #include <QTreeWidget>
 #include "async/framework.hpp"
 #include "helpers/apktool.hpp"
+#include "helpers/../../../flowlayout.hpp"
 #include "helpers/format.hpp"
 #include "helpers/text.hpp"
 #include "tasks.hpp"

@@ -7,15 +7,13 @@ namespace Components {
 Framework::Framework(QWidget *parent) :
     QWidget(parent)
 {
-    QHBoxLayout *buttons = new QHBoxLayout;
+    FlowLayout *buttons = new FlowLayout;
     QVBoxLayout *layout = new QVBoxLayout(this);
     QPushButton *browse = new QPushButton(translate("button_browse"), this);
     QPushButton *remove = new QPushButton(translate("button_remove"), this);
     tree = new QTreeWidget(this);
     buttons->addWidget(browse);
     buttons->addWidget(remove);
-    buttons->setAlignment(browse, Qt::AlignLeft);
-    buttons->setAlignment(remove, Qt::AlignLeft);
     connections.append(connect(browse, &QPushButton::clicked, [ this ] () {
         QFileDialog dialog(this, translate("title_select"), Helpers::Settings::previousDirectory(), "Framework APK (*.apk)");
         dialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -45,7 +43,9 @@ Framework::Framework(QWidget *parent) :
         this->tree->model()->removeRow(selected.row());
     }));
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    layout->setSpacing(4);
+    layout->addWidget(tree);
+    layout->addLayout(buttons);
     tree->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tree->setRootIsDecorated(false);
     tree->setMaximumHeight(160);
@@ -56,8 +56,6 @@ Framework::Framework(QWidget *parent) :
     labels << translate("header_tag");
     labels << translate("header_time");
     tree->setHeaderLabels(labels);
-    layout->addWidget(tree);
-    layout->addLayout(buttons);
     fixButtonSize(browse);
     fixButtonSize(remove);
     refreshFrameworks();

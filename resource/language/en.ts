@@ -1279,6 +1279,42 @@
 <context>
     <name>project</name>
     <message>
+        <source>button_browse</source>
+        <translation>Browse</translation>
+    </message>
+    <message>
+        <source>button_cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <source>button_decompile</source>
+        <translation>Decompile</translation>
+    </message>
+    <message>
+        <source>label_apk</source>
+        <translation>APK Path</translation>
+    </message>
+    <message>
+        <source>label_framework</source>
+        <translation>Framework Dependency</translation>
+    </message>
+    <message>
+        <source>label_java</source>
+        <translation>Decompile Java Source(s)</translation>
+    </message>
+    <message>
+        <source>label_project_name</source>
+        <translation>Project Name</translation>
+    </message>
+    <message>
+        <source>label_project_path</source>
+        <translation>Project Path</translation>
+    </message>
+    <message>
+        <source>title_browse</source>
+        <translation>Choose folder</translation>
+    </message>
+    <message>
         <source>title_window</source>
         <translation>New Project</translation>
     </message>
