@@ -25,12 +25,4 @@ ADB Features:
 -   File Browser With CHMOD
 -   Partition/Mounts Manager
 
-Screenshots:
--------------
-![Windows Screenshot](https://farm4.staticflickr.com/3869/14157221369_9faac79450_b.jpg "Windows Screenshot")
-
-![Ubuntu/Linux Screenshot](https://farm3.staticflickr.com/2917/14323481396_58b00df1e8_b.jpg "Ubuntu/Linux Screenshot")
-
-Support:
--------------
-[![Donate](https://pledgie.com/campaigns/26789.png?skin_name=chrome "Donate")](https://pledgie.com/campaigns/26789)
+> Drooids
